@@ -54,6 +54,13 @@ $showQueryCache = (SHOW_SUPERGLOBALS_QUERYCACHE == 'true') ? true: false;
 function superglobals_echo() {
   ob_start();
   if (superglobals_check_allowed() === TRUE){
+    if (SHOW_SUPERGLOBALS_EXCLUSIONS != '') {
+      $sg_exclusions = explode (',', SHOW_SUPERGLOBALS_EXCLUSIONS);
+      foreach ($sg_exclusions as $current_exclusion) {
+        unset ($GLOBALS[$current_exclusion]);
+        
+      }
+    }
     echo "\n" . '<div id="superglobals">' . "\n";
     echo '<h4>$GLOBALS:</h4>';
     superglobals_format($GLOBALS);
