@@ -54,13 +54,6 @@ $showQueryCache = (SHOW_SUPERGLOBALS_QUERYCACHE == 'true') ? true: false;
 function superglobals_echo() {
   ob_start();
   if (superglobals_check_allowed() === TRUE){
-    if (SHOW_SUPERGLOBALS_EXCLUSIONS != '') {
-      $sg_exclusions = explode (',', SHOW_SUPERGLOBALS_EXCLUSIONS);
-      foreach ($sg_exclusions as $current_exclusion) {
-        unset ($GLOBALS[$current_exclusion]);
-        
-      }
-    }
     echo "\n" . '<div id="superglobals">' . "\n";
     echo '<h4>$GLOBALS:</h4>';
     superglobals_format($GLOBALS);
@@ -82,7 +75,7 @@ function superglobals_echo() {
     // add js popup script
       ob_start();
 //-bof-c-v1.4.4-torvista
-      ?><script language="javascript" type="text/javascript">
+      ?><script type="text/javascript">
       <!--
       function superglobalspopup() {
         var newwindow=window.open('','name', 'status=yes, menubar=yes, scrollbars=1, fullscreen=1, resizable=1, toolbar=yes');
@@ -148,13 +141,15 @@ function superglobals_format(&$superglobals_var, $recursion = FALSE, $show_custo
   $tabs_li = $tabs . "\t";
 
   if (sizeof($superglobals_var)){
+    $sg_exclusions = explode (',', SHOW_SUPERGLOBALS_EXCLUSIONS);
+
     echo $tabs . '<ul' . $class . '>';
     $numLineItems = 0;
     if (is_array($superglobals_var)|is_object($superglobals_var)){
 
       foreach($superglobals_var as $key => $v){
       
-        if ( !$showQueryCache && $key === 'queryCache' ) continue;  /*v1.4.3-c-lat9*/
+        if ( (!$showQueryCache && $key === 'queryCache') || in_array ($key, $sg_exclusions) ) continue;
 
         // store the top level key into $toplevel_key (used during recursion to determine if the value should be echoed or not)
         if ($recursionlevel == 0) $toplevel_key = $key;
@@ -189,7 +184,7 @@ function superglobals_format(&$superglobals_var, $recursion = FALSE, $show_custo
                    break;
 
                case 'resource':
-                   echo $tabs_li . '<li class="superglobals_resource"><strong>' . htmlspecialchars(strval($key), ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(resource: ' . get_resource_type($v) . ')</span> => ' . htmlspecialchars(strval($v), ENT_COMPAT, CHARSET, true);  /*v1.41c-lat9*/
+                   echo $tabs_li . '<li class="superglobals_resource"><strong>' . htmlspecialchars(strval($key), ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(resource: ' . get_resource_type($v) . ')</span> =&gt; ' . htmlspecialchars(strval($v), ENT_COMPAT, CHARSET, true);  /*v1.41c-lat9*/
                    // split out if get_resource_type == 'mysql result' ?
                    if (get_resource_type($v) == 'mysql result' && function_exists('mysql_fetch_array')){  /*v1.4.4c-lat9*/
                      $mysql_array = array();  /*v1.4.4a-lat9*/
@@ -202,12 +197,12 @@ function superglobals_format(&$superglobals_var, $recursion = FALSE, $show_custo
                    break;
 
                case 'string':
-                   echo $tabs_li . '<li><strong>' . htmlspecialchars($key, ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(string)</span> => ' . htmlentities($v, ENT_COMPAT, CHARSET, true) . '</li>';   /*v1.41c-lat9*/
+                   echo $tabs_li . '<li><strong>' . htmlspecialchars($key, ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(string)</span> =&gt; ' . htmlentities($v, ENT_COMPAT, CHARSET, true) . '</li>';   /*v1.41c-lat9*/
                    break;
 
                default:
          
-                   echo $tabs_li . '<li><strong>' . $key . '</strong> <span class="superglobals_type">(' . gettype($v) . ')</span> => ' . htmlspecialchars(strval($v), ENT_COMPAT, CHARSET, true) . '</li>';  /*v1.41c-lat9*/
+                   echo $tabs_li . '<li><strong>' . $key . '</strong> <span class="superglobals_type">(' . gettype($v) . ')</span> =&gt; ' . htmlspecialchars(strval($v), ENT_COMPAT, CHARSET, true) . '</li>';  /*v1.41c-lat9*/
 
             } // end switch
           }
