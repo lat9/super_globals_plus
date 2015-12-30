@@ -145,19 +145,16 @@ function superglobals_format(&$superglobals_var, $recursion = FALSE, $show_custo
 
     echo $tabs . '<ul' . $class . '>';
     $numLineItems = 0;
-    if (is_array($superglobals_var)|is_object($superglobals_var)){
-
+    if (is_array($superglobals_var) || is_object($superglobals_var)){
       foreach($superglobals_var as $key => $v){
-      
-        if ( (!$showQueryCache && $key === 'queryCache') || in_array ($key, $sg_exclusions) ) continue;
-
+    
+        if ( (!$showQueryCache && $key === 'queryCache') || array_search ($key, $sg_exclusions) ) continue;
         // store the top level key into $toplevel_key (used during recursion to determine if the value should be echoed or not)
         if ($recursionlevel == 0) $toplevel_key = $key;
         //if ($recursionlevel => 0 && ($key === $toplevel_key) && $v===toplevel_v)
 
         // check if toplevel_key starts with ....
         if (((SHOW_SUPERGLOBALS_FILTER_HTTP == 'false'))|(!(strstr($toplevel_key,'HTTP_') == $toplevel_key))) {
-
           if((SHOW_SUPERGLOBALS_ALL == 'true') | $show_customvar |($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET == 'true')|($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST == 'true')|($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE == 'true')|($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST == 'true')|($toplevel_key === '_SESSION' && SHOW_SUPERGLOBALS_SESSION == 'true')|($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER == 'true')|($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV == 'true')|($toplevel_key === '_FILES' && SHOW_SUPERGLOBALS_FILES == 'true')) {
          $numLineItems++;
          switch(gettype($v)){
@@ -210,8 +207,7 @@ function superglobals_format(&$superglobals_var, $recursion = FALSE, $show_custo
       } // end foreach
 
     } else {
-      //
-      //echo   $tabs_li . '<li><strong>' . 'var'. '</strong> => ' . $superglobals_var. '</li>'
+//      echo   $tabs_li . '<li><strong>' . 'var'. '</strong> => ' . $superglobals_var. '</li>';
     }
   if($numLineItems == 0) echo $tabs_li . '<li>&nbsp;</li>';
     echo $tabs . '</ul>';
