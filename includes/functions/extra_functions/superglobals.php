@@ -51,33 +51,35 @@ echo $globals;
 
 $showQueryCache = (SHOW_SUPERGLOBALS_QUERYCACHE == 'true') ? true: false;
 
-function superglobals_echo() {
-  ob_start();
-  if (superglobals_check_allowed() === TRUE){
-    echo "\n" . '<div id="superglobals">' . "\n";
-    echo '<h4>$GLOBALS:</h4>';
-    superglobals_format($GLOBALS);
-    if(SHOW_SUPERGLOBALS_GET_DEFINED_CONSTANTS == 'true'){
-      echo '<h4>get_defined_constants()</h4>' . "\n";
-      superglobals_format(get_defined_constants(), FALSE, TRUE);
-    }
-    if(SHOW_SUPERGLOBALS_GET_INCLUDED_FILES == 'true'){
-      echo '<h4>get_included_files()</h4>' . "\n";
-      superglobals_format(get_included_files(), FALSE, TRUE);
-    }   
-    echo '<h4>The source of the Superglobals Plus script is subject to version 2.0 of the GPL license. Copyright: Paul Mathot, Haarlem The Netherlands.</h4>';
-    echo '</div>' . "\n";
-  
-    $superglobals_buffer = ob_get_contents();
-    ob_end_clean();
-    
-    if(!(SHOW_SUPERGLOBALS_POPUP == 'false')){
-    // add js popup script
-      ob_start();
-//-bof-c-v1.4.4-torvista
-      ?><script type="text/javascript">
-      <!--
-      function superglobalspopup() {
+function superglobals_echo() 
+{
+    ob_start();
+    if (superglobals_check_allowed() === true) {
+        echo "\n" . '<div id="superglobals">' . "\n";
+        echo '<h4>$GLOBALS:</h4>';
+        superglobals_format($GLOBALS);
+        if (SHOW_SUPERGLOBALS_GET_DEFINED_CONSTANTS == 'true') {
+            echo '<h4>get_defined_constants()</h4>' . "\n";
+            superglobals_format(get_defined_constants(), false, true);
+        }
+        if (SHOW_SUPERGLOBALS_GET_INCLUDED_FILES == 'true'){
+            echo '<h4>get_included_files()</h4>' . "\n";
+            superglobals_format(get_included_files(), false, true);
+        }   
+        echo '<h4>The source of the Superglobals Plus script is subject to version 2.0 of the GPL license. Copyright: Paul Mathot, Haarlem The Netherlands.</h4>';
+        echo '</div>' . "\n";
+
+        $superglobals_buffer = ob_get_contents();
+        ob_end_clean();
+
+        if (!SHOW_SUPERGLOBALS_POPUP == 'false') {
+            // add js popup script
+            ob_start();
+            //-bof-c-v1.4.4-torvista
+?>
+<script type="text/javascript">
+<!--
+    function superglobalspopup() {
         var newwindow=window.open('','name', 'status=yes, menubar=yes, scrollbars=1, fullscreen=1, resizable=1, toolbar=yes');
         var tmp = newwindow.document;
         tmp.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n');
@@ -87,151 +89,183 @@ function superglobals_echo() {
         tmp.write('<title>Superglobals Popup<\/title>\n');
         tmp.write('<link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_INCLUDES . 'stylesheet_superglobals.css'; ?>" />\n');    
         tmp.write('<\/head><body>\n');
-        <?php
+<?php
         $find = array("\r", "\r\n", "\n"); //steve how to get carriage returns for better-looking html source?
-        $replace = array("", "", ""); ?>
+        $replace = array("", "", ""); 
+?>
         tmp.write('<?php echo addslashes(str_replace($find, $replace, $superglobals_buffer)) ; ?>\n');
         tmp.write('<\/body>\n<\/html>');
         tmp.close();
-      }
-      superglobalspopup();
-      -->
-      </script><?php
-//-eof-c-v1.4.4-torvista
-      $superglobals_buffer = ob_get_contents();
-      ob_end_clean();
     }
-  }else{
-    return NULL;
-  }
-  return  $superglobals_buffer;
+    superglobalspopup();
+-->
+</script>
+<?php
+            //-eof-c-v1.4.4-torvista
+            $superglobals_buffer = ob_get_contents();
+            ob_end_clean();
+        }
+    } else {
+        return NULL;
+    }
+    return $superglobals_buffer;
 }
 
-function superglobals_check_allowed() {
-
-  if (defined('SHOW_SUPERGLOBALS_FROM_ADMIN')){
-    // the script is being called from the admin
-    if((SHOW_SUPERGLOBALS_ADMIN == 'true')&&(in_array (superglobals_get_ip_address(), explode (',', str_replace(' ', '', SHOW_SUPERGLOBALS_IP)))|(SHOW_SUPERGLOBALS_TO_ALL == 'true'))) return TRUE;
-  }else{
-    if((SHOW_SUPERGLOBALS == 'true')&&((in_array (superglobals_get_ip_address(), explode (',', str_replace(' ', '', SHOW_SUPERGLOBALS_IP))))|(SHOW_SUPERGLOBALS_TO_ALL == 'true'))) return TRUE;
-  }
-  return FALSE;
+function superglobals_check_allowed() 
+{
+    if (defined('SHOW_SUPERGLOBALS_FROM_ADMIN')) {
+        // the script is being called from the admin
+        if ( (SHOW_SUPERGLOBALS_ADMIN == 'true'&& in_array(superglobals_get_ip_address(), explode(',', str_replace(' ', '', SHOW_SUPERGLOBALS_IP)))) || SHOW_SUPERGLOBALS_TO_ALL == 'true') {
+            return true;
+        }
+    } else {
+        if ( (SHOW_SUPERGLOBALS == 'true' && in_array(superglobals_get_ip_address(), explode(',', str_replace(' ', '', SHOW_SUPERGLOBALS_IP)))) || SHOW_SUPERGLOBALS_TO_ALL == 'true') {
+            return true;
+        }
+    }
+    return false;
 }
 
-function superglobals_format(&$superglobals_var, $recursion = FALSE, $show_customvar = FALSE){
-  global $showQueryCache;
+function superglobals_format(&$superglobals_var, $recursion = false, $show_customvar = false)
+{
+    global $showQueryCache;
   
-  // $recursion = FALSE => reset recursion if the function is not called (a second time) from itself
-  static $recursionlevel, $toplevel_key, $class;
+    // $recursion = FALSE => reset recursion if the function is not called (a second time) from itself
+    static $recursionlevel, $toplevel_key, $class;
 
-  if ((!isset($recursionlevel)|$recursion === FALSE))$recursionlevel = 0;
-  if(($recursionlevel > (int)SHOW_SUPERGLOBALS_MAX_LEVEL) && ((int)SHOW_SUPERGLOBALS_MAX_LEVEL >= 1)) die('Superglobals message: Maximum recursion level exceeded! (Current recursion level:' . $recursionlevel . ')'); // basic recursion protection
-  $superglobals_var_type = '';
-  if (is_array($superglobals_var)) $superglobals_var_type = 'array';
-  if (is_object($superglobals_var)) $superglobals_var_type = 'object';
+    if (!isset($recursionlevel) || $recursion === false) {
+        $recursionlevel = 0;
+    }
+    if ($recursionlevel > (int)SHOW_SUPERGLOBALS_MAX_LEVEL && ((int)SHOW_SUPERGLOBALS_MAX_LEVEL) >= 1) {
+        die('Superglobals message: Maximum recursion level exceeded! (Current recursion level:' . $recursionlevel . ')'); // basic recursion protection
+    }
+    $superglobals_var_type = '';
+    if (is_array($superglobals_var)) {
+        $superglobals_var_type = 'array';
+    }
+    if (is_object($superglobals_var)) {
+        $superglobals_var_type = 'object';
+    }
 
-  if (!(isset($class))) $class = '';
-  if (!($superglobals_var_type == '')) $class = ' class="superglobals_' . $superglobals_var_type . '"';
+    if (!isset($class)) {
+        $class = '';
+    }
+    if (!$superglobals_var_type == '') {
+        $class = ' class="superglobals_' . $superglobals_var_type . '"';
+    }
 
-  // $tabs and $tabs_li are used for html source formatting only
-  $tabs = "\n";
-  for ($i=0; $i<=$recursionlevel; $i++){
-    $tabs .= "\t";
-  }
-  $tabs_li = $tabs . "\t";
+    // $tabs and $tabs_li are used for html source formatting only
+    $tabs = "\n";
+    for ($i = 0; $i <= $recursionlevel; $i++) {
+        $tabs .= "\t";
+    }
+    $tabs_li = $tabs . "\t";
 
-  if (sizeof($superglobals_var)){
-    $sg_exclusions = explode (',', SHOW_SUPERGLOBALS_EXCLUSIONS);
+    if (sizeof($superglobals_var)) {
+        $sg_exclusions = explode(',', SHOW_SUPERGLOBALS_EXCLUSIONS);
 
-    echo $tabs . '<ul' . $class . '>';
-    $numLineItems = 0;
-    if (is_array($superglobals_var) || is_object($superglobals_var)){
+        echo $tabs . '<ul' . $class . '>';
+        $numLineItems = 0;
+        if (is_array($superglobals_var) || is_object($superglobals_var)) {
+            foreach ($superglobals_var as $key => $v) {
+                if ( (!$showQueryCache && $key === 'queryCache') || ($key != 0 && in_array($key, $sg_exclusions)) ) continue;
 
-      foreach($superglobals_var as $key => $v){
-      
-        if ( (!$showQueryCache && $key === 'queryCache') || ($key != 0 && in_array ($key, $sg_exclusions)) ) continue;
+                // store the top level key into $toplevel_key (used during recursion to determine if the value should be echoed or not)
+                if ($recursionlevel == 0) {
+                    $toplevel_key = $key;
+                }
 
-        // store the top level key into $toplevel_key (used during recursion to determine if the value should be echoed or not)
-        if ($recursionlevel == 0) $toplevel_key = $key;
-        //if ($recursionlevel => 0 && ($key === $toplevel_key) && $v===toplevel_v)
+                // check if toplevel_key starts with ....
+                if (SHOW_SUPERGLOBALS_FILTER_HTTP == 'false' || !strstr($toplevel_key, 'HTTP_') == $toplevel_key) {
+                    if (SHOW_SUPERGLOBALS_ALL == 'true' 
+                        || $show_customvar 
+                        || ($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET == 'true') 
+                        || ($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST == 'true') 
+                        || ($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE == 'true') 
+                        || ($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST == 'true') 
+                        || ($toplevel_key === '_SESSION' && SHOW_SUPERGLOBALS_SESSION == 'true')
+                        || ($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER == 'true') 
+                        || ($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV == 'true') 
+                        || ($toplevel_key === '_FILES' && SHOW_SUPERGLOBALS_FILES == 'true')) {
+                        $numLineItems++;
+                        switch (gettype($v)) {
+                            case 'array':
+                                echo $tabs_li;
+                                echo '<li class="superglobals_array">' . '<strong>' . $key . '</strong> <span class="superglobals_type">(array)</span>';
+                                if ($key === 'GLOBALS') {
+                                    echo 'Superglobals message: recursion!';
+                                }
+                                $recursionlevel++;
+                                // $GLOBALS is recursive, prevent infinite loop
+                                if (!($key === 'GLOBALS')) {
+                                    superglobals_format($v, true);
+                                }
+                                $recursionlevel--;
+                                echo '</li>';
+                                break;
 
-        // check if toplevel_key starts with ....
-        if (((SHOW_SUPERGLOBALS_FILTER_HTTP == 'false'))|(!(strstr($toplevel_key,'HTTP_') == $toplevel_key))) {
+                            case 'object':
+                                echo $tabs_li;
+                                echo '<li class="superglobals_object">' . '<strong>' . $key . '</strong> <span class="superglobals_type">(object: '.  get_class($v) . ')</span>';
+                                $recursionlevel++;
+                                superglobals_format($v, true);
+                                $recursionlevel--;
+                                echo '</li>';
+                                //if (is_object($v)) var_dump($v);
+                                break;
 
-          if((SHOW_SUPERGLOBALS_ALL == 'true') | $show_customvar |($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET == 'true')|($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST == 'true')|($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE == 'true')|($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST == 'true')|($toplevel_key === '_SESSION' && SHOW_SUPERGLOBALS_SESSION == 'true')|($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER == 'true')|($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV == 'true')|($toplevel_key === '_FILES' && SHOW_SUPERGLOBALS_FILES == 'true')) {
-         $numLineItems++;
-         switch(gettype($v)){
-               case 'array':
+                            case 'resource':
+                                echo $tabs_li . '<li class="superglobals_resource"><strong>' . htmlspecialchars(strval($key), ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(resource: ' . get_resource_type($v) . ')</span> =&gt; ' . htmlspecialchars(strval($v), ENT_COMPAT, CHARSET, true);
+                                // split out if get_resource_type == 'mysql result' ?
+                                if (get_resource_type($v) == 'mysql result' && function_exists('mysql_fetch_array')) {
+                                    $mysql_array = array();
+                                    while ($line = mysql_fetch_array($v, MYSQL_ASSOC)){
+                                        $mysql_array[] = $line;
+                                    }
+                                    superglobals_format($mysql_array, true);
+                                }
+                                echo '</li>';
+                                break;
 
-                   echo $tabs_li;
-                   echo '<li class="superglobals_array">' . '<strong>' . $key . '</strong> <span class="superglobals_type">(array)</span>';
-                   if ($key === 'GLOBALS') echo 'Superglobals message: recursion!';
-                   $recursionlevel++;
-                   // $GLOBALS is recursive, prevent infinite loop
-                   if (!($key === 'GLOBALS')) superglobals_format($v, TRUE);
-                   $recursionlevel--;
-                   echo '</li>';
-                   break;
+                            case 'string':
+                                echo $tabs_li . '<li><strong>' . htmlspecialchars($key, ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(string)</span> =&gt; ' . htmlentities($v, ENT_COMPAT, CHARSET, true) . '</li>';
+                                break;
 
-               case 'object':
-                   echo $tabs_li;
-                   echo '<li class="superglobals_object">' . '<strong>' . $key . '</strong> <span class="superglobals_type">(object: '.  get_class($v) . ')</span>';
-                   $recursionlevel++;
-                   superglobals_format($v, TRUE);
-                   $recursionlevel--;
-                   echo '</li>';
-                   //if (is_object($v)) var_dump($v);
-                   break;
+                            default:
+                                echo $tabs_li . '<li><strong>' . $key . '</strong> <span class="superglobals_type">(' . gettype($v) . ')</span> =&gt; ' . htmlspecialchars(strval($v), ENT_COMPAT, CHARSET, true) . '</li>';
+                                break;
 
-               case 'resource':
-                   echo $tabs_li . '<li class="superglobals_resource"><strong>' . htmlspecialchars(strval($key), ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(resource: ' . get_resource_type($v) . ')</span> =&gt; ' . htmlspecialchars(strval($v), ENT_COMPAT, CHARSET, true);  /*v1.41c-lat9*/
-                   // split out if get_resource_type == 'mysql result' ?
-                   if (get_resource_type($v) == 'mysql result' && function_exists('mysql_fetch_array')){  /*v1.4.4c-lat9*/
-                     $mysql_array = array();  /*v1.4.4a-lat9*/
-                     while ($line = mysql_fetch_array($v, MYSQL_ASSOC)){
-                        $mysql_array[] = $line;
-                     }
-                     superglobals_format($mysql_array, TRUE);
-                   }
-                   echo '</li>';
-                   break;
-
-               case 'string':
-                   echo $tabs_li . '<li><strong>' . htmlspecialchars($key, ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(string)</span> =&gt; ' . htmlentities($v, ENT_COMPAT, CHARSET, true) . '</li>';   /*v1.41c-lat9*/
-                   break;
-
-               default:
-         
-                   echo $tabs_li . '<li><strong>' . $key . '</strong> <span class="superglobals_type">(' . gettype($v) . ')</span> =&gt; ' . htmlspecialchars(strval($v), ENT_COMPAT, CHARSET, true) . '</li>';  /*v1.41c-lat9*/
-
-            } // end switch
-          }
-        } // end check if toplevel_key starts with ....
-      } // end foreach
+                        } // end switch
+                    }
+                } // end check if toplevel_key starts with ....
+            } // end foreach
+        } else {
+//      echo   $tabs_li . '<li><strong>' . 'var'. '</strong> => ' . $superglobals_var. '</li>';
+        }
+        if ($numLineItems == 0) {
+            echo $tabs_li . '<li>&nbsp;</li>';
+        }
+        echo $tabs . '</ul>';
 
     } else {
-//      echo   $tabs_li . '<li><strong>' . 'var'. '</strong> => ' . $superglobals_var. '</li>';
-    }
-  if($numLineItems == 0) echo $tabs_li . '<li>&nbsp;</li>';
-    echo $tabs . '</ul>';
-
-  }else{
-    echo $tabs . '<ul' . $class . '>';
+        echo $tabs . '<ul' . $class . '>';
 //-bof-c-v1.4.4-torvista
-    echo $tabs_li . '<li class="superglobals_empty">';
-    if ($superglobals_var_type) echo '<strong>' . $superglobals_var_type . '</strong> ';
-    echo 'Superglobals message: empty!</li>';
+        echo $tabs_li . '<li class="superglobals_empty">';
+        if ($superglobals_var_type) {
+            echo '<strong>' . $superglobals_var_type . '</strong> ';
+        }
+        echo 'Superglobals message: empty!</li>';
 //-eof-c-v1.4.4-torvista
-    echo $tabs . '</ul>';
-  }
+        echo $tabs . '</ul>';
+    }
 }
-function superglobals_get_ip_address() {
-  if(!empty($_SERVER['REMOTE_ADDR'])){
-    $ip = $_SERVER['REMOTE_ADDR'];
-  }else{
-    $ip = 'unknown';
-  }
-  
-  return $ip;
+
+function superglobals_get_ip_address() 
+{
+    if (!empty($_SERVER['REMOTE_ADDR'])) {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    } else {
+        $ip = 'unknown';
+    }
+    return $ip;
 }
-?>
