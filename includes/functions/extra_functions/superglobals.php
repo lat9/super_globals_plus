@@ -72,7 +72,7 @@ function superglobals_echo()
         $superglobals_buffer = ob_get_contents();
         ob_end_clean();
 
-        if (!SHOW_SUPERGLOBALS_POPUP == 'false') {
+    if(!(SHOW_SUPERGLOBALS_POPUP == 'false')){
             // add js popup script
             ob_start();
             //-bof-c-v1.4.4-torvista
