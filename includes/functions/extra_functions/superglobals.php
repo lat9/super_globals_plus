@@ -48,6 +48,16 @@ $globals = superglobals_echo();
 echo $globals;
 
 */
+// -----
+// The 'is_countable' function is introduced in PHP 7.3; create a compatible
+// instance if the function's not available for the current PHP version.
+//
+if (!function_exists('is_countable')) {
+    function is_countable($c) 
+    {
+        return is_array($c) || $c instanceof Countable;
+    }
+}
 
 $showQueryCache = (SHOW_SUPERGLOBALS_QUERYCACHE == 'true') ? true: false;
 
@@ -171,7 +181,7 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
     }
     $tabs_li = $tabs . "\t";
 
-    if (sizeof($superglobals_var)) {
+    if (is_countable($superglobals_var) && count($superglobals_var) != 0) {
         $sg_exclusions = explode(',', SHOW_SUPERGLOBALS_EXCLUSIONS);
 
         echo $tabs . '<ul' . $class . '>';
