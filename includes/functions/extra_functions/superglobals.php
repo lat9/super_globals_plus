@@ -181,7 +181,7 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
     }
     $tabs_li = $tabs . "\t";
 
-    if (is_countable($superglobals_var) && count($superglobals_var) != 0) {
+    if (is_object($superglobals_var) || (is_countable($superglobals_var) && count($superglobals_var) != 0)) {
         $sg_exclusions = explode(',', SHOW_SUPERGLOBALS_EXCLUSIONS);
 
         echo $tabs . '<ul' . $class . '>';
