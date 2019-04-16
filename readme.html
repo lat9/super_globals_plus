@@ -74,7 +74,7 @@ Features:</p>
 &lt;!--bof- superglobals display --&gt;
 &lt;?php
 // BEGIN Superglobals
-if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPER_GLOBALS_ADMIN == 'true') echo superglobals_echo();
+if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPERGLOBALS_ADMIN == 'true') echo superglobals_echo();
 // END Superglobals
 ?&gt;
 &lt;!--eof- superglobals display --&gt;
@@ -120,7 +120,7 @@ if (defined('SHOW_SUPERGLOBALS') && SHOW_SUPERGLOBALS == 'true') echo supergloba
 &lt;!--bof- superglobals display --&gt;
 &lt;?php
 // BEGIN Superglobals
-if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPER_GLOBALS_ADMIN == 'true') echo superglobals_echo();
+if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPERGLOBALS_ADMIN == 'true') echo superglobals_echo();
 // END Superglobals
 ?&gt;
 &lt;!--eof- superglobals display --&gt;
@@ -132,6 +132,10 @@ if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPER_GLOBALS_ADMIN == 'true') ec
 
 <h2>Version History:</h2>
 <ul>
+  <li>v2.0.1 (lat9), 2019-04-16<ul>
+    <li>BUGFIX: Correct to-be-added snippets for <b>Installing Super Globals</b>, step 3, and <b>Admin Home-Page Installation</b>.</li>
+    <li>Documentation-only change!</li>
+  </ul></li>
   <li>v2.0.0 (lat9), 2019-01-07<ul>
     <li>BUGFIX: Future-proofing; need to check that an object is &quot;countable&quot; before using <code>sizeof</code> or <code>count</code>!</li>
     <li>CHANGE: <span class="corefile">Core</span> and <span class="template">template-override</span> are no longer distributed.  Please follow the installation instructions to add the required changes to your store's admin and storefront files.</li>
