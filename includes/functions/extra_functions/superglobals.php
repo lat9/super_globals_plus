@@ -70,11 +70,15 @@ function superglobals_echo()
         superglobals_format($GLOBALS);
         if (SHOW_SUPERGLOBALS_GET_DEFINED_CONSTANTS == 'true') {
             echo '<h4>get_defined_constants()</h4>' . "\n";
-            superglobals_format(get_defined_constants(), false, true);
+            $defined_constants = get_defined_constants();
+            superglobals_format($defined_constants, false, true);
+            unset($defined_constants);
         }
         if (SHOW_SUPERGLOBALS_GET_INCLUDED_FILES == 'true'){
             echo '<h4>get_included_files()</h4>' . "\n";
-            superglobals_format(get_included_files(), false, true);
+            $included_files = get_included_files();
+            superglobals_format($included_files, false, true);
+            unset($included_files);
         }   
         echo '<h4>The source of the Superglobals Plus script is subject to version 2.0 of the GPL license. Copyright: Paul Mathot, Haarlem The Netherlands.</h4>';
         echo '</div>' . "\n";
