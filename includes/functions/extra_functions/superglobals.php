@@ -7,7 +7,7 @@
 // | This source file is subject to version 2.0 of the GPL license,       |
 // | that is bundled with this package in the file LICENSE.TXT            |
 // +----------------------------------------------------------------------+
-// $Id: superglobals.php v1.4.4
+// $Id: superglobals.php v2.0.2
 //
 // Change History:
 // 2007/10/15 ... v1.24 ... Paul Mathot ... Initial Zen Cart release
@@ -59,7 +59,7 @@ if (!function_exists('is_countable')) {
     }
 }
 
-$showQueryCache = (SHOW_SUPERGLOBALS_QUERYCACHE == 'true') ? true: false;
+$showQueryCache = (defined('SHOW_SUPERGLOBALS_QUERYCACHE') && SHOW_SUPERGLOBALS_QUERYCACHE == 'true');
 
 function superglobals_echo() 
 {
