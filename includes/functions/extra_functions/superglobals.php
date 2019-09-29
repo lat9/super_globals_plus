@@ -7,7 +7,7 @@
 // | This source file is subject to version 2.0 of the GPL license,       |
 // | that is bundled with this package in the file LICENSE.TXT            |
 // +----------------------------------------------------------------------+
-// $Id: superglobals.php v2.0.2
+// $Id: superglobals.php v2.1.0
 //
 // Change History:
 // 2007/10/15 ... v1.24 ... Paul Mathot ... Initial Zen Cart release
@@ -137,17 +137,54 @@ function superglobals_echo()
 
 function superglobals_check_allowed() 
 {
+    // -----
+    // Indicate, initially, that the output should not be generated.
+    //
+    $is_enabled = false;
+    
+    // -----
+    // If we're being called from the admin ...
+    //
     if (defined('SHOW_SUPERGLOBALS_FROM_ADMIN')) {
-        // the script is being called from the admin
-        if ( (SHOW_SUPERGLOBALS_ADMIN == 'true'&& in_array(superglobals_get_ip_address(), explode(',', str_replace(' ', '', SHOW_SUPERGLOBALS_IP)))) || SHOW_SUPERGLOBALS_TO_ALL == 'true') {
-            return true;
+        // -----
+        // ... and the admin-display is enabled, indicate that the output should be generated.
+        //
+        if (SHOW_SUPERGLOBALS_ADMIN == 'true' && superglobals_ip_check()) {
+            $is_enabled = true;
         }
+    // -----
+    // Otherwise, we're being called from the storefront ...
+    //
     } else {
-        if ( (SHOW_SUPERGLOBALS == 'true' && in_array(superglobals_get_ip_address(), explode(',', str_replace(' ', '', SHOW_SUPERGLOBALS_IP)))) || SHOW_SUPERGLOBALS_TO_ALL == 'true') {
-            return true;
+        // -----
+        // ... if the storefront-display is enabled, indicate that the output should be generated.
+        //
+        if (SHOW_SUPERGLOBALS == 'true' && superglobals_ip_check()) {
+            $is_enabled = true;
         }
     }
-    return false;
+    return $is_enabled;
+}
+
+// -----
+// Function, called from superglobals_check_allowed, that validates whether the plugin's output should
+// be generated for the current IP address.
+//
+// Note: v2.1.0 and later of the plugin operates on Zen Cart notifications, but it's possible that the
+// store's files have included an in-line call to generate that output ... and we don't want to double-up
+// the output.  This function sets a global variable to indicate that it's been run to prevent that
+// double output.
+//
+function superglobals_ip_check()
+{
+    $ip_valid = false;
+    if (!isset($GLOBALS['superglobals_output'])) {
+        if (SHOW_SUPERGLOBALS_TO_ALL == 'true' || in_array(superglobals_get_ip_address(), explode(',', str_replace(' ', '', SHOW_SUPERGLOBALS_IP)))) {
+            $ip_valid = true;
+        }
+        $GLOBALS['superglobals_output'] = true;
+    }
+    return $ip_valid;
 }
 
 function superglobals_format(&$superglobals_var, $recursion = false, $show_customvar = false)
