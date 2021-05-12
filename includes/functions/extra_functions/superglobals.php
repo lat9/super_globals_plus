@@ -70,6 +70,11 @@ function superglobals_echo()
 
     ob_start();
     if (superglobals_check_allowed() === true) {
+        $superglobals_stylesheet = DIR_FS_CATALOG . 'includes/templates/template_default/css/superglobals.css';
+        if (file_exists($superglobals_stylesheet)) {
+            echo "\n" . '<style>' . file_get_contents($superglobals_stylesheet) . '</style>';
+        }
+
         echo "\n" . '<div id="superglobals">' . "\n";
         echo '<h4>$GLOBALS:</h4>';
 
@@ -92,7 +97,7 @@ function superglobals_echo()
         $superglobals_buffer = ob_get_contents();
         ob_end_clean();
 
-    if(!(SHOW_SUPERGLOBALS_POPUP == 'false')){
+        if (!(SHOW_SUPERGLOBALS_POPUP == 'false')){
             // add js popup script
             ob_start();
             //-bof-c-v1.4.4-torvista

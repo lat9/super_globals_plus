@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Super Globals Plus for Zen Cart v1.3.9 and 1.5.0 through 1.5.8</title>
 <style>
@@ -19,6 +19,7 @@ img, #features { float: left; }
 .clear { clear: both; }
 .corefile { color: red; }
 .removed { text-decoration: line-through; }
+.added { color: blue; }
 .template { color: green; }
 .smaller { font-size: smaller; }
 ol li, ul li { margin-left: 0; }
@@ -37,7 +38,7 @@ ol li ul li, ul li ul li, ul li, ol li { margin: 0 auto 5px; }
 
 <h2>What it does</h2>
 <p>Super Globals Plus is a developers' tool that makes evaluating variables easy. It produces a clear overview of the contents of strings, arrays, constants, objects, arrays within object, objects within arrays or whatever. 
-Because the amount of information given by this tool was overwhelming to most new users of the Super Globals Plus script, version 1.24 and later only shows $_POST and $_SESSION by default.<br /><br />
+Because the amount of information given by this tool was overwhelming to most new users of the Super Globals Plus script, version 1.24 and later only shows $_POST and $_SESSION by default.<br><br>
 Features:</p>
 <ul id="features">
 <li>Show all GLOBALS, or just the Superglobals you need to evaluate.</li>
@@ -59,7 +60,7 @@ Features:</p>
 <p>After you have you have <a href="#install">installed</a> the plugin and logged into your store's admin, you will see the <em>Configuration-&gt;Superglobals</em> selection.  Within that selection are the values that you can use to control the plugin's display.</p>
 
 <h2 id="install">Installation</h2>
-<p>There are no core-file overwrites for the <em>storefront</em> elements of this plugin, but there are <span class="corefile">core-file</span> admin changes and one <span class="template">template-override</span> on the storefront. You should <strong>always</strong> backup your store's database and files prior to making any changes.</p>
+<p>There are no core-file overwrites for the <em>storefront</em> elements of this plugin, but (depending on your base Zen Cart version) there might be a <span class="corefile">core-file</span> admin change required.  You also might need to change one of your storefront template files, if the template author hasn't provided the required notification.  You should <strong>always</strong> backup your store's database and files prior to making any changes.</p>
 <p><strong>Note:</strong> The installation process for <em>Super Globals Plus</em>, v2.0.0 has <em>again</em> changed.  The admin- and template files that require update for this plugin have changed again for Zen Cart 1.5.6.  As such, the <em>Super Globals</em> installation now <em>might</em> require you to edit the files required by this plugin, based on the version of Zen Cart into which you're installing/upgrading this plugin!</p>
 
 <h3>Installing Super Globals</h3>
@@ -67,12 +68,12 @@ Features:</p>
 <ol>
   <li>Unzip the plugin's distribution file.</li>
   <li>Rename the &quot;YOUR_ADMIN&quot; directory to match your secret admin directory's name.</li>
-  <li>If you require the <em>Super Globals</em> display to be available admin-side, you <em>might</em> need to make the following edits to files <em>in your store's admin-directory</em>:<ol>
+  <li>If you require the <em>Super Globals</em> display to be available admin-side, you <em>might</em> need to make the following edits to files <em>in your store's admin-directory</em>:<ol type="a">
     <li><code>/includes/footer.php</code>:<ul>
-        <li>If your store runs on a version of Zen Cart <em>prior to</em> 156b, you'll need to add the following line, just after the <b>&lt;/footer&gt;</b> tag:<br />
+        <li>If your store runs on a version of Zen Cart <em>prior to</em> 156b, you'll need to add the following line, just after the <b>&lt;/footer&gt;</b> tag:<br>
             <textarea rows="1" cols="110">$zco_notifier-&gt;notify('NOTIFY_ADMIN_FOOTER_END');</textarea>
         </li>
-        <li>If you are upgrading from a version <em>prior to</em> v2.1.0 of <em>Super Globals</em>, you can safely remove this code block:<br />
+        <li>If you are upgrading from a version <em>prior to</em> v2.1.0 of <em>Super Globals</em>, you can safely remove this code block:<br>
             <textarea rows="7" cols="110">
 &lt;!--bof- superglobals display --&gt;
 &lt;?php
@@ -84,21 +85,23 @@ if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPERGLOBALS_ADMIN == 'true') ech
             </textarea>
         </li>
     </ul></li>
-    <li><code>/includes/stylesheet.css</code>: Find the line that reads:<br /><br />
-      <code>@import url("index.css");/* including stylesheet for index.php */</code><br /><br />
-      and add this line directly after that:<br /><br />
-      <code class="corefile">@import url("stylesheet_superglobals.css");/* including stylesheet for superglobals display */</code>
+    <li><code>/includes/stylesheet.css</code>:<ul>
+        <li>If you are upgrading from a version <em>prior to</em> v2.2.0 of <em>Super Globals</em>, find the line that reads:<br><br>
+            <code class="corefile">@import url("stylesheet_superglobals.css");/* including stylesheet for superglobals display */</code><br><br>
+            and remove it!
+        </li></ul>
   </ol></li>
-  <li>Rename the &quot;YOUR_TEMPLATE&quot; directory to match your current storefront template's name, then make the following changes to your template's <code>/common/tpl_main_page.php</code>, at the very bottom of that file, just before the <b>&lt;/body&gt;</b> tag:<ul>
-    <li>If that file does not include the following code block, present in the &quot;core&quot; Zen Cart templates since v155, you'll need to add it:<br />
-        <textarea rows="3" cols="110">
+  <li>If you require the <em>Super Globals</em> display to be available on the storefront, you <em>might</em> need to make the following file changes ... noting that <b>YOUR_TEMPLATE</b> is a reference to your store's currently-active template:<ol type="a">
+    <li><code>/includes/templates/YOUR_TEMPLATE/common/tpl_main_page.php</code>:<ul>
+        <li>If that file does not include the following code block just before the <b>&lt;/body&gt;</b> tag (present in the &quot;core&quot; Zen Cart templates since v155), you'll need to add it:<br>
+            <textarea rows="3" cols="110">
 &lt;?php /* add any end-of-page code via an observer class */
   $zco_notifier-&gt;notify('NOTIFY_FOOTER_END', $current_page);
 ?&gt;
-        </textarea>
-    </li>
-    <li>If you are upgrading from a version <em>prior to</em> v2.1.0 of <em>Super Globals</em>, you can safely remove this code block:<br />
-        <textarea rows="7" cols="110">
+            </textarea>
+        </li>
+        <li>If you are upgrading from a version <em>prior to</em> v2.1.0 of <em>Super Globals</em>, you can safely remove this code block:<br>
+            <textarea rows="7" cols="110">
 &lt;!--bof- superglobals display --&gt;
 &lt;?php
 // BEGIN Superglobals
@@ -106,19 +109,22 @@ if (defined('SHOW_SUPERGLOBALS') && SHOW_SUPERGLOBALS == 'true') echo supergloba
 // END Superglobals
 ?&gt;
 &lt;!--eof- superglobals display --&gt;
-        </textarea>
-    </li>
-  </ul></li>
+            </textarea>
+        </li>
+    </ul></li>
+    <li><code>/includes/templates/YOUR_TEMPLATE/css/stylesheet_superglobals.css</code>.  This file can be safely removed from your store's file-system.</li>
+  </ol></li>
   <li>Log into your Zen Cart admin.</li>
   <li>Copy the plugin's files to your store's file-system:<ol>
     <li>/includes/auto_loaders/config.SuperGlobals.php <span class="smaller">(Added in v2.1.0)</span></li>
     <li>/includes/classes/observers/SuperGlobalsObserver.php <span class="smaller">(Added in v2.1.0)</span></li>
     <li>/includes/functions/extra_functions/superglobals.php</li>
+    <li><span class="added">/includes/templates/template_default/css/superglobals.css</span> <span class="smaller">(Added in v2.2.0)</span></li>
     <li><span class="template removed">/includes/templates/YOUR_TEMPLATE/common/tpl_main_page.php</span> <span class="smaller">(No longer distributed, as of v2.0.0.  Use the version you updated at step 4)</span></li>
-    <li>/includes/templates/YOUR_TEMPLATE/css/stylesheet_superglobals.css</li>
+    <li><span class="removed">/includes/templates/YOUR_TEMPLATE/css/stylesheet_superglobals.css</span> <span class="smaller">(No longer used, as of v2.2.0)</span></li>
     <li><span class="corefile removed">/YOUR_ADMIN/includes/footer.php</span> <span class="smaller">(No longer distributed, as of v2.0.0.  Use the version you updated at step 3.1)</span></li>
     <li><span class="corefile removed">/YOUR_ADMIN/includes/stylesheet.css</span> <span class="smaller">(No longer distributed, as of v2.0.0.  Use the version you updated at step 3.2)</span></li>
-    <li>/YOUR_ADMIN/includes/stylesheet_superglobals.css</li>
+    <li><span class="removed">/YOUR_ADMIN/includes/stylesheet_superglobals.css</span> <span class="smaller">(No longer used, as of v2.2.0)</span></li>
     <li>/YOUR_ADMIN/includes/auto_loaders/config.SuperGlobalsAdmin.php <span class="smaller">(Added in v2.1.0)</span></li>
     <li>/YOUR_ADMIN/includes/functions/extra_functions/superglobals.php</li>
     <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/superglobals.php</li>
@@ -152,8 +158,12 @@ if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPERGLOBALS_ADMIN == 'true') ech
 <ul>
   <li>v2.2.0 (lat9), 2021-05-12<ul>
     <li>CHANGE: 'unset' the $languageLoader variable, introduced in zc158, since it causes recursion errors.</li>
-    <li>The following files were changed/added:<ol>
+    <li>CHANGE: Load styling <em>only if</em> the <em>Super Globals</em> display is enabled.</li>
+    <li>The following files were changed/<span class="added">added</span>/<span class="removed">removed</span>:<ol>
         <li>/includes/functions/extra_functions/superglobals.php</li>
+        <li><span class="added">/includes/templates/template_default/css/superglobals.css</span></li>
+        <li><span class="removed">/includes/templates/YOUR_TEMPLATE/css/stylesheet_superglobals.css</span></li>
+        <li><span class="removed">/YOUR_ADMIN/includes/stylesheet_superglobals.css</span></li>
     </ol></li>
   </ul></li>
   <li>v2.1.0 (lat9), 2019-09-29<ul>
@@ -265,7 +275,7 @@ if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPERGLOBALS_ADMIN == 'true') ech
   </ul></li>
   <li>v1.1<ul>
     <li>(re)Added output buffering</li>
-    <li>Added HTTP_ filter:<br /><pre>if (!(strstr($toplevel_key,'HTTP_') == $toplevel_key)) {</pre></li>
+    <li>Added HTTP_ filter:<br><pre>if (!(strstr($toplevel_key,'HTTP_') == $toplevel_key)) {</pre></li>
   </ul></li>
   <li>v1.0, First public non beta version.<ul>
     <li>Removed the "Show single var" feature, since it did not make much sense after all.</li>
