@@ -63,10 +63,16 @@ $showQueryCache = (defined('SHOW_SUPERGLOBALS_QUERYCACHE') && SHOW_SUPERGLOBALS_
 
 function superglobals_echo() 
 {
+    // -----
+    // Needed for zc158+, since that $languageLoader results in a circular reference.
+    //
+    unset($GLOBALS['languageLoader']);
+
     ob_start();
     if (superglobals_check_allowed() === true) {
         echo "\n" . '<div id="superglobals">' . "\n";
         echo '<h4>$GLOBALS:</h4>';
+
         superglobals_format($GLOBALS);
         if (SHOW_SUPERGLOBALS_GET_DEFINED_CONSTANTS == 'true') {
             echo '<h4>get_defined_constants()</h4>' . "\n";
