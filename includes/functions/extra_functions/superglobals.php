@@ -189,7 +189,7 @@ function superglobals_ip_check()
     return $ip_valid;
 }
 
-function superglobals_format(&$superglobals_var, $recursion = false, $show_customvar = false)
+function superglobals_format($superglobals_var, $recursion = false, $show_customvar = false)
 {
     global $showQueryCache;
 
