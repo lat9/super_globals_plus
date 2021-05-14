@@ -111,17 +111,16 @@ function superglobals_echo()
                 $stylesheet_location = $GLOBALS['template']->get_template_dir('.css', DIR_WS_TEMPLATE, $GLOBALS['current_page_base'], 'css') . '/stylesheet_superglobals.css';
             }
 ?>
-<script type="text/javascript">
-<!--
+<script >
     function superglobalspopup() {
-        var newwindow=window.open('','name', 'status=yes, menubar=yes, scrollbars=1, fullscreen=1, resizable=1, toolbar=yes');
-        var tmp = newwindow.document;
-        tmp.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n');
-        tmp.write('<html xmlns="http://www.w3.org/1999/xhtml">\n');
+        let newwindow=window.open('','name', 'status=yes, menubar=yes, scrollbars=1, fullscreen=1, resizable=1, toolbar=yes');
+        let tmp = newwindow.document;
+        tmp.write('<!doctype html>\n');
+        tmp.write('<html <?php echo HTML_PARAMS; ?>>\n');
         tmp.write('<head>\n');
         tmp.write('<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />\n');
         tmp.write('<title>Superglobals Popup<\/title>\n');
-        tmp.write('<link rel="stylesheet" type="text/css" href="<?php echo $stylesheet_location; ?>" />\n');
+        tmp.write('<link rel="stylesheet" href="<?php echo $stylesheet_location; ?>" />\n');
         tmp.write('<\/head><body>\n');
 <?php
         $find = array("\r", "\r\n", "\n"); //steve how to get carriage returns for better-looking html source?
@@ -132,7 +131,6 @@ function superglobals_echo()
         tmp.close();
     }
     superglobalspopup();
--->
 </script>
 <?php
             //-eof-c-v1.4.4-torvista
