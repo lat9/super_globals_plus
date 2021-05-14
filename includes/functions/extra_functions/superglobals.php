@@ -49,8 +49,8 @@ echo $globals;
 
 */
 // -----
-// The 'is_countable' function is introduced in PHP 7.3; create a compatible
-// instance if the function's not available for the current PHP version.
+// The 'is_countable' function was introduced in PHP 7.3; create a compatible
+// instance if the function is not available in the current PHP version.
 //
 if (!function_exists('is_countable')) {
     function is_countable($c)
@@ -165,14 +165,9 @@ function superglobals_check_allowed()
         }
     // -----
     // Otherwise, we're being called from the storefront ...
-    //
-    } else {
-        // -----
-        // ... if the storefront-display is enabled, indicate that the output should be generated.
-        //
-        if (SHOW_SUPERGLOBALS === 'true' && superglobals_ip_check()) {
-            $is_enabled = true;
-        }
+    // if the storefront-display is enabled, indicate that the output should be generated.
+    } elseif (SHOW_SUPERGLOBALS === 'true' && superglobals_ip_check()) {
+        $is_enabled = true;
     }
     return $is_enabled;
 }
