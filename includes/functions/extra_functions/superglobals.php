@@ -228,9 +228,7 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
 
     // $tabs and $tabs_li are used for html source formatting only
     $tabs = "\n";
-    for ($i = 0; $i <= $recursionlevel; $i++) {
-        $tabs .= "\t";
-    }
+    $tabs .= str_repeat("\t", $recursionlevel + 1);
     $tabs_li = $tabs . "\t";
 
     if (is_object($superglobals_var) || (is_countable($superglobals_var) && count($superglobals_var) !== 0)) {
