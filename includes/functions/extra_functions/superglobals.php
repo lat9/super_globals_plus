@@ -222,7 +222,7 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
     if (!isset($class)) {
         $class = '';
     }
-    if (!$superglobals_var_type == '') {
+    if (!($superglobals_var_type === '')) {
         $class = ' class="superglobals_' . $superglobals_var_type . '"';
     }
 
@@ -233,17 +233,17 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
     }
     $tabs_li = $tabs . "\t";
 
-    if (is_object($superglobals_var) || (is_countable($superglobals_var) && count($superglobals_var) != 0)) {
+    if (is_object($superglobals_var) || (is_countable($superglobals_var) && count($superglobals_var) !== 0)) {
         $sg_exclusions = explode(',', SHOW_SUPERGLOBALS_EXCLUSIONS);
 
         echo $tabs . '<ul' . $class . '>';
         $numLineItems = 0;
         if (is_array($superglobals_var) || is_object($superglobals_var)) {
             foreach ($superglobals_var as $key => $v) {
-                if ( (!$showQueryCache && $key === 'queryCache') || ($key != 0 && in_array($key, $sg_exclusions)) ) continue;
+                if ( (!$showQueryCache && $key === 'queryCache') || ($key !== 0 && in_array($key, $sg_exclusions)) ) continue;
 
                 // store the top level key into $toplevel_key (used during recursion to determine if the value should be echoed or not)
-                if ($recursionlevel == 0) {
+                if ($recursionlevel === 0) {
                     $toplevel_key = $key;
                 }
 
@@ -302,7 +302,7 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
                 } // end check if toplevel_key starts with ....
             } // end foreach
         }
-        if ($numLineItems == 0) {
+        if ($numLineItems === 0) {
             echo $tabs_li . '<li>&nbsp;</li>';
         }
         echo $tabs . '</ul>';
