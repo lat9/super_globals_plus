@@ -1,3 +1,4 @@
+@charset "utf-8";
 /* handy for some CSS-P layouts, like the one at www.beterelektro.nl for example, just remove .www-beterelektro-nl if you need it on your site too */
 .www-beterelektro-nl #superglobals {
 position: absolute;
@@ -5,12 +6,13 @@ top: 300%;
 left: 0;
 }
 #superglobals {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: small;
   background: #ccc;
   padding:  1px 0;
 }
 #superglobals ul {
-  border: 1px solid black;
-  border-width: 0 0 0px 1px;
+  border-width: 0 0 0 1px;
   border-left-color: black;
 }
 #superglobals ul {
@@ -19,11 +21,11 @@ left: 0;
   background: #fffffa;
 }
 #superglobals ul, #superglobals li {
-  margin: 0px;
+  margin: 0;
   padding: 0 0 0 3px;
 }
 #superglobals ul, #superglobals li {
-  margin:  5px 24px;
+  margin: 5px 24px;
 }
 .superglobals_hidden {
   display: none;
