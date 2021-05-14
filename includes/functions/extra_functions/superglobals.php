@@ -279,15 +279,15 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
                                 break;
 
                             case 'resource':
-                                echo $tabs_li . '<li class="superglobals_resource"><strong>' . htmlspecialchars((string)$key, ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(resource: ' . get_resource_type($v) . ')</span> =&gt; ' . htmlspecialchars((string)$v, ENT_COMPAT, CHARSET, true) . '</li>';
+                                echo $tabs_li . '<li class="superglobals_resource"><strong>' . htmlspecialchars((string)$key, ENT_COMPAT, CHARSET) . '</strong> <span class="superglobals_type">(resource: ' . get_resource_type($v) . ')</span> =&gt; ' . htmlspecialchars((string)$v, ENT_COMPAT, CHARSET) . '</li>';
                                 break;
 
                             case 'string':
-                                echo $tabs_li . '<li><strong>' . htmlspecialchars((string)$key, ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(string)</span> =&gt; ' . htmlentities($v, ENT_COMPAT, CHARSET, true) . '</li>';
+                                echo $tabs_li . '<li><strong>' . htmlspecialchars((string)$key, ENT_COMPAT, CHARSET) . '</strong> <span class="superglobals_type">(string)</span> =&gt; ' . htmlentities($v, ENT_COMPAT, CHARSET) . '</li>';
                                 break;
 
                             default:
-                                echo $tabs_li . '<li><strong>' . $key . '</strong> <span class="superglobals_type">(' . gettype($v) . ')</span> =&gt; ' . htmlspecialchars((string) $v, ENT_COMPAT, CHARSET, true) . '</li>';
+                                echo $tabs_li . '<li><strong>' . $key . '</strong> <span class="superglobals_type">(' . gettype($v) . ')</span> =&gt; ' . htmlspecialchars((string) $v, ENT_COMPAT, CHARSET) . '</li>';
                                 break;
 
                         } // end switch
