@@ -290,7 +290,7 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
                                 break;
 
                             case 'string':
-                                echo $tabs_li . '<li><strong>' . htmlspecialchars($key, ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(string)</span> =&gt; ' . htmlentities($v, ENT_COMPAT, CHARSET, true) . '</li>';
+                                echo $tabs_li . '<li><strong>' . htmlspecialchars((string)$key, ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(string)</span> =&gt; ' . htmlentities($v, ENT_COMPAT, CHARSET, true) . '</li>';
                                 break;
 
                             default:
