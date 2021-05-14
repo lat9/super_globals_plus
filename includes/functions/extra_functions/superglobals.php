@@ -53,7 +53,7 @@ echo $globals;
 // instance if the function's not available for the current PHP version.
 //
 if (!function_exists('is_countable')) {
-    function is_countable($c) 
+    function is_countable($c)
     {
         return is_array($c) || $c instanceof Countable;
     }
@@ -61,7 +61,7 @@ if (!function_exists('is_countable')) {
 
 $showQueryCache = (defined('SHOW_SUPERGLOBALS_QUERYCACHE') && SHOW_SUPERGLOBALS_QUERYCACHE == 'true');
 
-function superglobals_echo() 
+function superglobals_echo()
 {
     // -----
     // Needed for zc158+, since that $languageLoader results in a circular reference.
@@ -90,7 +90,7 @@ function superglobals_echo()
             $included_files = get_included_files();
             superglobals_format($included_files, false, true);
             unset($included_files);
-        }   
+        }
         echo '<h4>The source of the Superglobals Plus script is subject to version 2.0 of the GPL license. Copyright: Paul Mathot, Haarlem The Netherlands.</h4>';
         echo '</div>' . "\n";
 
@@ -101,7 +101,7 @@ function superglobals_echo()
             // add js popup script
             ob_start();
             //-bof-c-v1.4.4-torvista
-            
+
             // -----
             // Stylesheet location depends on "environment" in which the plugin has been loaded. From the admin, it's in the base /includes
             // directory; from the storefront, it's in the template-specific CSS directory.
@@ -122,11 +122,11 @@ function superglobals_echo()
         tmp.write('<head>\n');
         tmp.write('<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />\n');
         tmp.write('<title>Superglobals Popup<\/title>\n');
-        tmp.write('<link rel="stylesheet" type="text/css" href="<?php echo $stylesheet_location; ?>" />\n');    
+        tmp.write('<link rel="stylesheet" type="text/css" href="<?php echo $stylesheet_location; ?>" />\n');
         tmp.write('<\/head><body>\n');
 <?php
         $find = array("\r", "\r\n", "\n"); //steve how to get carriage returns for better-looking html source?
-        $replace = array("", "", ""); 
+        $replace = array("", "", "");
 ?>
         tmp.write('<?php echo addslashes(str_replace($find, $replace, $superglobals_buffer)) ; ?>\n');
         tmp.write('<\/body>\n<\/html>');
@@ -146,13 +146,13 @@ function superglobals_echo()
     return $superglobals_buffer;
 }
 
-function superglobals_check_allowed() 
+function superglobals_check_allowed()
 {
     // -----
     // Indicate, initially, that the output should not be generated.
     //
     $is_enabled = false;
-    
+
     // -----
     // If we're being called from the admin ...
     //
@@ -201,7 +201,7 @@ function superglobals_ip_check()
 function superglobals_format(&$superglobals_var, $recursion = false, $show_customvar = false)
 {
     global $showQueryCache;
-  
+
     // $recursion = FALSE => reset recursion if the function is not called (a second time) from itself
     static $recursionlevel, $toplevel_key, $class;
 
@@ -249,15 +249,15 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
 
                 // check if toplevel_key starts with ....
                 if (SHOW_SUPERGLOBALS_FILTER_HTTP == 'false' || !strstr($toplevel_key, 'HTTP_') == $toplevel_key) {
-                    if (SHOW_SUPERGLOBALS_ALL == 'true' 
-                        || $show_customvar 
-                        || ($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET == 'true') 
-                        || ($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST == 'true') 
-                        || ($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE == 'true') 
-                        || ($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST == 'true') 
+                    if (SHOW_SUPERGLOBALS_ALL == 'true'
+                        || $show_customvar
+                        || ($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET == 'true')
+                        || ($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST == 'true')
+                        || ($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE == 'true')
+                        || ($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST == 'true')
                         || ($toplevel_key === '_SESSION' && SHOW_SUPERGLOBALS_SESSION == 'true')
-                        || ($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER == 'true') 
-                        || ($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV == 'true') 
+                        || ($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER == 'true')
+                        || ($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV == 'true')
                         || ($toplevel_key === '_FILES' && SHOW_SUPERGLOBALS_FILES == 'true')) {
                         $numLineItems++;
                         switch (gettype($v)) {
@@ -320,7 +320,7 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
     }
 }
 
-function superglobals_get_ip_address() 
+function superglobals_get_ip_address()
 {
     if (!empty($_SERVER['REMOTE_ADDR'])) {
         $ip = $_SERVER['REMOTE_ADDR'];
