@@ -59,7 +59,7 @@ if (!function_exists('is_countable')) {
     }
 }
 
-$showQueryCache = (defined('SHOW_SUPERGLOBALS_QUERYCACHE') && SHOW_SUPERGLOBALS_QUERYCACHE == 'true');
+$showQueryCache = (defined('SHOW_SUPERGLOBALS_QUERYCACHE') && SHOW_SUPERGLOBALS_QUERYCACHE === 'true');
 
 function superglobals_echo()
 {
@@ -79,13 +79,13 @@ function superglobals_echo()
         echo '<h4>$GLOBALS:</h4>';
 
         superglobals_format($GLOBALS);
-        if (SHOW_SUPERGLOBALS_GET_DEFINED_CONSTANTS == 'true') {
+        if (SHOW_SUPERGLOBALS_GET_DEFINED_CONSTANTS === 'true') {
             echo '<h4>get_defined_constants()</h4>' . "\n";
             $defined_constants = get_defined_constants();
             superglobals_format($defined_constants, false, true);
             unset($defined_constants);
         }
-        if (SHOW_SUPERGLOBALS_GET_INCLUDED_FILES == 'true'){
+        if (SHOW_SUPERGLOBALS_GET_INCLUDED_FILES === 'true'){
             echo '<h4>get_included_files()</h4>' . "\n";
             $included_files = get_included_files();
             superglobals_format($included_files, false, true);
@@ -97,7 +97,7 @@ function superglobals_echo()
         $superglobals_buffer = ob_get_contents();
         ob_end_clean();
 
-        if (!(SHOW_SUPERGLOBALS_POPUP == 'false')){
+        if (!(SHOW_SUPERGLOBALS_POPUP === 'false')){
             // add js popup script
             ob_start();
             //-bof-c-v1.4.4-torvista
@@ -160,7 +160,7 @@ function superglobals_check_allowed()
         // -----
         // ... and the admin-display is enabled, indicate that the output should be generated.
         //
-        if (SHOW_SUPERGLOBALS_ADMIN == 'true' && superglobals_ip_check()) {
+        if (SHOW_SUPERGLOBALS_ADMIN === 'true' && superglobals_ip_check()) {
             $is_enabled = true;
         }
     // -----
@@ -170,7 +170,7 @@ function superglobals_check_allowed()
         // -----
         // ... if the storefront-display is enabled, indicate that the output should be generated.
         //
-        if (SHOW_SUPERGLOBALS == 'true' && superglobals_ip_check()) {
+        if (SHOW_SUPERGLOBALS === 'true' && superglobals_ip_check()) {
             $is_enabled = true;
         }
     }
@@ -190,7 +190,7 @@ function superglobals_ip_check()
 {
     $ip_valid = false;
     if (!isset($GLOBALS['superglobals_output'])) {
-        if (SHOW_SUPERGLOBALS_TO_ALL == 'true' || in_array(superglobals_get_ip_address(), explode(',', str_replace(' ', '', SHOW_SUPERGLOBALS_IP)))) {
+        if (SHOW_SUPERGLOBALS_TO_ALL === 'true' || in_array(superglobals_get_ip_address(), explode(',', str_replace(' ', '', SHOW_SUPERGLOBALS_IP)))) {
             $ip_valid = true;
         }
         $GLOBALS['superglobals_output'] = true;
@@ -248,17 +248,17 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
                 }
 
                 // check if toplevel_key starts with ....
-                if (SHOW_SUPERGLOBALS_FILTER_HTTP == 'false' || !strstr($toplevel_key, 'HTTP_') == $toplevel_key) {
-                    if (SHOW_SUPERGLOBALS_ALL == 'true'
+                if (SHOW_SUPERGLOBALS_FILTER_HTTP === 'false' || !strstr($toplevel_key, 'HTTP_') == $toplevel_key) {
+                    if (SHOW_SUPERGLOBALS_ALL === 'true'
                         || $show_customvar
-                        || ($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET == 'true')
-                        || ($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST == 'true')
-                        || ($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE == 'true')
-                        || ($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST == 'true')
-                        || ($toplevel_key === '_SESSION' && SHOW_SUPERGLOBALS_SESSION == 'true')
-                        || ($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER == 'true')
-                        || ($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV == 'true')
-                        || ($toplevel_key === '_FILES' && SHOW_SUPERGLOBALS_FILES == 'true')) {
+                        || ($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET === 'true')
+                        || ($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST === 'true')
+                        || ($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE === 'true')
+                        || ($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST === 'true')
+                        || ($toplevel_key === '_SESSION' && SHOW_SUPERGLOBALS_SESSION === 'true')
+                        || ($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER === 'true')
+                        || ($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV === 'true')
+                        || ($toplevel_key === '_FILES' && SHOW_SUPERGLOBALS_FILES === 'true')) {
                         $numLineItems++;
                         switch (gettype($v)) {
                             case 'array':
