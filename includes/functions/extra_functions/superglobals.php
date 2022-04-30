@@ -7,7 +7,7 @@
 // | This source file is subject to version 2.0 of the GPL license,       |
 // | that is bundled with this package in the file LICENSE.TXT            |
 // +----------------------------------------------------------------------+
-// $Id: superglobals.php v2.1.0
+// $Id: superglobals.php v2.2.1
 //
 // Change History:
 // 2007/10/15 ... v1.24 ... Paul Mathot ... Initial Zen Cart release
@@ -59,7 +59,7 @@ if (!function_exists('is_countable')) {
     }
 }
 
-$showQueryCache = (defined('SHOW_SUPERGLOBALS_QUERYCACHE') && SHOW_SUPERGLOBALS_QUERYCACHE == 'true');
+$showQueryCache = (defined('SHOW_SUPERGLOBALS_QUERYCACHE') && SHOW_SUPERGLOBALS_QUERYCACHE === 'true');
 
 function superglobals_echo() 
 {
@@ -69,51 +69,53 @@ function superglobals_echo()
     unset($GLOBALS['languageLoader']);
 
     ob_start();
-    if (superglobals_check_allowed() === true) {
-        $superglobals_stylesheet = DIR_FS_CATALOG . 'includes/templates/template_default/css/superglobals.css';
-        if (file_exists($superglobals_stylesheet)) {
-            echo "\n" . '<style>' . file_get_contents($superglobals_stylesheet) . '</style>';
+    if (superglobals_check_allowed() === false) {
+        return null;
+    }
+
+    $superglobals_stylesheet = DIR_FS_CATALOG . 'includes/templates/template_default/css/superglobals.css';
+    if (file_exists($superglobals_stylesheet)) {
+        echo "\n" . '<style>' . file_get_contents($superglobals_stylesheet) . '</style>';
+    }
+
+    echo "\n" . '<div id="superglobals">' . "\n";
+    echo '<h4>$GLOBALS:</h4>';
+
+    superglobals_format($GLOBALS);
+    if (SHOW_SUPERGLOBALS_GET_DEFINED_CONSTANTS === 'true') {
+        echo '<h4>get_defined_constants()</h4>' . "\n";
+        $defined_constants = get_defined_constants();
+        superglobals_format($defined_constants, false, true);
+        unset($defined_constants);
+    }
+    if (SHOW_SUPERGLOBALS_GET_INCLUDED_FILES === 'true'){
+        echo '<h4>get_included_files()</h4>' . "\n";
+        $included_files = get_included_files();
+        superglobals_format($included_files, false, true);
+        unset($included_files);
+    }   
+    echo '<h4>The source of the Superglobals Plus script is subject to version 2.0 of the GPL license. Copyright: Paul Mathot, Haarlem The Netherlands.</h4>';
+    echo '</div>' . "\n";
+
+    $superglobals_buffer = ob_get_contents();
+    ob_end_clean();
+
+    if (SHOW_SUPERGLOBALS_POPUP !== 'false') {
+        // add js popup script
+        ob_start();
+        //-bof-c-v1.4.4-torvista
+        
+        // -----
+        // Stylesheet location depends on "environment" in which the plugin has been loaded. From the admin, it's in the base /includes
+        // directory; from the storefront, it's in the template-specific CSS directory.
+        //
+        if (defined('SHOW_SUPERGLOBALS_FROM_ADMIN')) {
+            $stylesheet_location = DIR_WS_INCLUDES . 'stylesheet_superglobals.css';
+        } else {
+            $stylesheet_location = $GLOBALS['template']->get_template_dir('.css', DIR_WS_TEMPLATE, $GLOBALS['current_page_base'], 'css') . '/stylesheet_superglobals.css';
         }
-
-        echo "\n" . '<div id="superglobals">' . "\n";
-        echo '<h4>$GLOBALS:</h4>';
-
-        superglobals_format($GLOBALS);
-        if (SHOW_SUPERGLOBALS_GET_DEFINED_CONSTANTS == 'true') {
-            echo '<h4>get_defined_constants()</h4>' . "\n";
-            $defined_constants = get_defined_constants();
-            superglobals_format($defined_constants, false, true);
-            unset($defined_constants);
-        }
-        if (SHOW_SUPERGLOBALS_GET_INCLUDED_FILES == 'true'){
-            echo '<h4>get_included_files()</h4>' . "\n";
-            $included_files = get_included_files();
-            superglobals_format($included_files, false, true);
-            unset($included_files);
-        }   
-        echo '<h4>The source of the Superglobals Plus script is subject to version 2.0 of the GPL license. Copyright: Paul Mathot, Haarlem The Netherlands.</h4>';
-        echo '</div>' . "\n";
-
-        $superglobals_buffer = ob_get_contents();
-        ob_end_clean();
-
-        if (!(SHOW_SUPERGLOBALS_POPUP == 'false')){
-            // add js popup script
-            ob_start();
-            //-bof-c-v1.4.4-torvista
-            
-            // -----
-            // Stylesheet location depends on "environment" in which the plugin has been loaded. From the admin, it's in the base /includes
-            // directory; from the storefront, it's in the template-specific CSS directory.
-            //
-            if (defined('SHOW_SUPERGLOBALS_FROM_ADMIN')) {
-                $stylesheet_location = DIR_WS_INCLUDES . 'stylesheet_superglobals.css';
-            } else {
-                $stylesheet_location = $GLOBALS['template']->get_template_dir('.css', DIR_WS_TEMPLATE, $GLOBALS['current_page_base'], 'css') . '/stylesheet_superglobals.css';
-            }
 ?>
-<script type="text/javascript">
-<!--
+<script>
     function superglobalspopup() {
         var newwindow=window.open('','name', 'status=yes, menubar=yes, scrollbars=1, fullscreen=1, resizable=1, toolbar=yes');
         var tmp = newwindow.document;
@@ -125,23 +127,19 @@ function superglobals_echo()
         tmp.write('<link rel="stylesheet" type="text/css" href="<?php echo $stylesheet_location; ?>" />\n');    
         tmp.write('<\/head><body>\n');
 <?php
-        $find = array("\r", "\r\n", "\n"); //steve how to get carriage returns for better-looking html source?
-        $replace = array("", "", ""); 
+        $find = ["\r", "\r\n", "\n"]; //steve how to get carriage returns for better-looking html source?
+        $replace = ['', '', '']; 
 ?>
         tmp.write('<?php echo addslashes(str_replace($find, $replace, $superglobals_buffer)) ; ?>\n');
         tmp.write('<\/body>\n<\/html>');
         tmp.close();
     }
     superglobalspopup();
--->
 </script>
 <?php
-            //-eof-c-v1.4.4-torvista
-            $superglobals_buffer = ob_get_contents();
-            ob_end_clean();
-        }
-    } else {
-        return NULL;
+        //-eof-c-v1.4.4-torvista
+        $superglobals_buffer = ob_get_contents();
+        ob_end_clean();
     }
     return $superglobals_buffer;
 }
@@ -152,7 +150,7 @@ function superglobals_check_allowed()
     // Indicate, initially, that the output should not be generated.
     //
     $is_enabled = false;
-    
+
     // -----
     // If we're being called from the admin ...
     //
@@ -160,7 +158,7 @@ function superglobals_check_allowed()
         // -----
         // ... and the admin-display is enabled, indicate that the output should be generated.
         //
-        if (SHOW_SUPERGLOBALS_ADMIN == 'true' && superglobals_ip_check()) {
+        if (SHOW_SUPERGLOBALS_ADMIN === 'true' && superglobals_ip_check()) {
             $is_enabled = true;
         }
     // -----
@@ -170,7 +168,7 @@ function superglobals_check_allowed()
         // -----
         // ... if the storefront-display is enabled, indicate that the output should be generated.
         //
-        if (SHOW_SUPERGLOBALS == 'true' && superglobals_ip_check()) {
+        if (SHOW_SUPERGLOBALS === 'true' && superglobals_ip_check()) {
             $is_enabled = true;
         }
     }
@@ -190,7 +188,7 @@ function superglobals_ip_check()
 {
     $ip_valid = false;
     if (!isset($GLOBALS['superglobals_output'])) {
-        if (SHOW_SUPERGLOBALS_TO_ALL == 'true' || in_array(superglobals_get_ip_address(), explode(',', str_replace(' ', '', SHOW_SUPERGLOBALS_IP)))) {
+        if (SHOW_SUPERGLOBALS_TO_ALL === 'true' || in_array(superglobals_get_ip_address(), explode(',', str_replace(' ', '', SHOW_SUPERGLOBALS_IP)))) {
             $ip_valid = true;
         }
         $GLOBALS['superglobals_output'] = true;
@@ -198,7 +196,7 @@ function superglobals_ip_check()
     return $ip_valid;
 }
 
-function superglobals_format(&$superglobals_var, $recursion = false, $show_customvar = false)
+function superglobals_format($superglobals_var, $recursion = false, $show_customvar = false)
 {
     global $showQueryCache;
   
@@ -248,17 +246,17 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
                 }
 
                 // check if toplevel_key starts with ....
-                if (SHOW_SUPERGLOBALS_FILTER_HTTP == 'false' || !strstr($toplevel_key, 'HTTP_') == $toplevel_key) {
-                    if (SHOW_SUPERGLOBALS_ALL == 'true' 
+                if (SHOW_SUPERGLOBALS_FILTER_HTTP === 'false' || !strstr($toplevel_key, 'HTTP_') == $toplevel_key) {
+                    if (SHOW_SUPERGLOBALS_ALL === 'true' 
                         || $show_customvar 
-                        || ($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET == 'true') 
-                        || ($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST == 'true') 
-                        || ($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE == 'true') 
-                        || ($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST == 'true') 
-                        || ($toplevel_key === '_SESSION' && SHOW_SUPERGLOBALS_SESSION == 'true')
-                        || ($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER == 'true') 
-                        || ($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV == 'true') 
-                        || ($toplevel_key === '_FILES' && SHOW_SUPERGLOBALS_FILES == 'true')) {
+                        || ($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET === 'true') 
+                        || ($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST === 'true') 
+                        || ($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE === 'true') 
+                        || ($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST === 'true') 
+                        || ($toplevel_key === '_SESSION' && SHOW_SUPERGLOBALS_SESSION === 'true')
+                        || ($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER === 'true') 
+                        || ($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV === 'true') 
+                        || ($toplevel_key === '_FILES' && SHOW_SUPERGLOBALS_FILES === 'true')) {
                         $numLineItems++;
                         switch (gettype($v)) {
                             case 'array':
@@ -302,7 +300,7 @@ function superglobals_format(&$superglobals_var, $recursion = false, $show_custo
                 } // end check if toplevel_key starts with ....
             } // end foreach
         }
-        if ($numLineItems == 0) {
+        if ($numLineItems === 0) {
             echo $tabs_li . '<li>&nbsp;</li>';
         }
         echo $tabs . '</ul>';
