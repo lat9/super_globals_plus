@@ -7,7 +7,7 @@
 // | This source file is subject to version 2.0 of the GPL license,       |
 // | that is bundled with this package in the file LICENSE.TXT            |
 // +----------------------------------------------------------------------+
-// $Id: superglobals.php v2.1.0
+// $Id: superglobals.php v2.2.1
 //
 // Change History:
 // 2007/10/15 ... v1.24 ... Paul Mathot ... Initial Zen Cart release
@@ -69,49 +69,52 @@ function superglobals_echo()
     unset($GLOBALS['languageLoader']);
 
     ob_start();
-    if (superglobals_check_allowed() === true) {
-        $superglobals_stylesheet = DIR_FS_CATALOG . 'includes/templates/template_default/css/superglobals.css';
-        if (file_exists($superglobals_stylesheet)) {
-            echo "\n" . '<style>' . file_get_contents($superglobals_stylesheet) . '</style>';
-        }
+    if (superglobals_check_allowed() === false) {
+        return null;
+    }
 
-        echo "\n" . '<div id="superglobals">' . "\n";
-        echo '<h4>$GLOBALS:</h4>';
+    $superglobals_stylesheet = DIR_FS_CATALOG . 'includes/templates/template_default/css/superglobals.css';
+    if (file_exists($superglobals_stylesheet)) {
+        echo "\n" . '<style>' . file_get_contents($superglobals_stylesheet) . '</style>';
+    }
 
-        superglobals_format($GLOBALS);
-        if (SHOW_SUPERGLOBALS_GET_DEFINED_CONSTANTS === 'true') {
-            echo '<h4>get_defined_constants()</h4>' . "\n";
-            $defined_constants = get_defined_constants();
-            superglobals_format($defined_constants, false, true);
-            unset($defined_constants);
-        }
-        if (SHOW_SUPERGLOBALS_GET_INCLUDED_FILES === 'true'){
-            echo '<h4>get_included_files()</h4>' . "\n";
-            $included_files = get_included_files();
-            superglobals_format($included_files, false, true);
-            unset($included_files);
-        }
-        echo '<h4>The source of the Superglobals Plus script is subject to version 2.0 of the GPL license. Copyright: Paul Mathot, Haarlem The Netherlands.</h4>';
-        echo '</div>' . "\n";
+    echo "\n" . '<div id="superglobals">' . "\n";
+    echo '<h4>$GLOBALS:</h4>';
+
+    superglobals_format($GLOBALS);
+    if (SHOW_SUPERGLOBALS_GET_DEFINED_CONSTANTS === 'true') {
+        echo '<h4>get_defined_constants()</h4>' . "\n";
+        $defined_constants = get_defined_constants();
+        superglobals_format($defined_constants, false, true);
+        unset($defined_constants);
+    }
+    if (SHOW_SUPERGLOBALS_GET_INCLUDED_FILES === 'true'){
+        echo '<h4>get_included_files()</h4>' . "\n";
+        $included_files = get_included_files();
+        superglobals_format($included_files, false, true);
+        unset($included_files);
+    }
+    echo '<h4>The source of the Superglobals Plus script is subject to version 2.0 of the GPL license. Copyright: Paul Mathot, Haarlem The Netherlands.</h4>';
+    echo '</div>' . "\n";
 
         $superglobals_buffer = ob_get_clean();
 
-        if (!(SHOW_SUPERGLOBALS_POPUP === 'false')){
-            // add js popup script
-            ob_start();
-            //-bof-c-v1.4.4-torvista
+    if (SHOW_SUPERGLOBALS_POPUP !== 'false') {
+        // add js popup script
+        ob_start();
+        //-bof-c-v1.4.4-torvista
 
-            // -----
-            // Stylesheet location depends on "environment" in which the plugin has been loaded. From the admin, it's in the base /includes
-            // directory; from the storefront, it's in the template-specific CSS directory.
-            //
-            if (defined('SHOW_SUPERGLOBALS_FROM_ADMIN')) {
-                $stylesheet_location = DIR_WS_INCLUDES . 'stylesheet_superglobals.css';
-            } else {
-                $stylesheet_location = $GLOBALS['template']->get_template_dir('.css', DIR_WS_TEMPLATE, $GLOBALS['current_page_base'], 'css') . '/stylesheet_superglobals.css';
-            }
+        // -----
+        // Stylesheet location depends on "environment" in which the plugin has been loaded. From the admin, it's in the base /includes
+        // directory; from the storefront, it's in the template-specific CSS directory.
+        //
+        if (defined('SHOW_SUPERGLOBALS_FROM_ADMIN')) {
+            $stylesheet_location = DIR_WS_INCLUDES . 'stylesheet_superglobals.css';
+        } else {
+            $stylesheet_location = $GLOBALS['template']->get_template_dir('.css', DIR_WS_TEMPLATE, $GLOBALS['current_page_base'], 'css') . '/stylesheet_superglobals.css';
+        }
 ?>
-<script >
+<script>
     function superglobalspopup() {
         let newwindow=window.open('','name', 'status=yes, menubar=yes, scrollbars=1, fullscreen=1, resizable=1, toolbar=yes');
         let tmp = newwindow.document;
@@ -123,7 +126,7 @@ function superglobals_echo()
         tmp.write('<link rel="stylesheet" href="<?php echo $stylesheet_location; ?>" />\n');
         tmp.write('<\/head><body>\n');
 <?php
-        $find = array("\r", "\r\n", "\n"); //steve how to get carriage returns for better-looking html source?
+        $find = array("\r", "\r\n", "\n"); //todo how to get carriage returns for better-looking html source?
         $replace = array("", "", "");
 ?>
         tmp.write('<?php echo addslashes(str_replace($find, $replace, $superglobals_buffer)) ; ?>\n');
@@ -135,9 +138,6 @@ function superglobals_echo()
 <?php
             //-eof-c-v1.4.4-torvista
             $superglobals_buffer = ob_get_clean();
-        }
-    } else {
-        return NULL;
     }
     return $superglobals_buffer;
 }
@@ -161,9 +161,14 @@ function superglobals_check_allowed()
         }
     // -----
     // Otherwise, we're being called from the storefront ...
-    // if the storefront-display is enabled, indicate that the output should be generated.
-    } elseif (SHOW_SUPERGLOBALS === 'true' && superglobals_ip_check()) {
-        $is_enabled = true;
+    //
+    } else {
+        // -----
+        // ... if the storefront-display is enabled, indicate that the output should be generated.
+        //
+        if (SHOW_SUPERGLOBALS === 'true' && superglobals_ip_check()) {
+            $is_enabled = true;
+        }
     }
     return $is_enabled;
 }
