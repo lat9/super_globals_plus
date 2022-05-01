@@ -97,7 +97,7 @@ function superglobals_echo()
     echo '<h4>The source of the Superglobals Plus script is subject to version 2.0 of the GPL license. Copyright: Paul Mathot, Haarlem The Netherlands.</h4>';
     echo '</div>' . "\n";
 
-        $superglobals_buffer = ob_get_clean();
+    $superglobals_buffer = ob_get_clean();
 
     if (SHOW_SUPERGLOBALS_POPUP !== 'false') {
         // add js popup script
@@ -137,8 +137,7 @@ function superglobals_echo()
 </script>
 <?php
         //-eof-c-v1.4.4-torvista
-        $superglobals_buffer = ob_get_contents();
-        ob_end_clean();
+        $superglobals_buffer = ob_get_clean();
     }
     return $superglobals_buffer;
 }
@@ -219,7 +218,7 @@ function superglobals_format($superglobals_var, $recursion = false, $show_custom
     if (!isset($class)) {
         $class = '';
     }
-    if (!($superglobals_var_type === '')) {
+    if ($superglobals_var_type !== '') {
         $class = ' class="superglobals_' . $superglobals_var_type . '"';
     }
 
