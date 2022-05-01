@@ -49,11 +49,11 @@ echo $globals;
 
 */
 // -----
-// The 'is_countable' function is introduced in PHP 7.3; create a compatible
-// instance if the function's not available for the current PHP version.
+// The 'is_countable' function was introduced in PHP 7.3; create a compatible
+// instance if the function is not available in the current PHP version.
 //
 if (!function_exists('is_countable')) {
-    function is_countable($c) 
+    function is_countable($c)
     {
         return is_array($c) || $c instanceof Countable;
     }
@@ -61,7 +61,7 @@ if (!function_exists('is_countable')) {
 
 $showQueryCache = (defined('SHOW_SUPERGLOBALS_QUERYCACHE') && SHOW_SUPERGLOBALS_QUERYCACHE === 'true');
 
-function superglobals_echo() 
+function superglobals_echo()
 {
     // -----
     // Needed for zc158+, since that $languageLoader results in a circular reference.
@@ -93,18 +93,17 @@ function superglobals_echo()
         $included_files = get_included_files();
         superglobals_format($included_files, false, true);
         unset($included_files);
-    }   
+    }
     echo '<h4>The source of the Superglobals Plus script is subject to version 2.0 of the GPL license. Copyright: Paul Mathot, Haarlem The Netherlands.</h4>';
     echo '</div>' . "\n";
 
-    $superglobals_buffer = ob_get_contents();
-    ob_end_clean();
+        $superglobals_buffer = ob_get_clean();
 
     if (SHOW_SUPERGLOBALS_POPUP !== 'false') {
         // add js popup script
         ob_start();
         //-bof-c-v1.4.4-torvista
-        
+
         // -----
         // Stylesheet location depends on "environment" in which the plugin has been loaded. From the admin, it's in the base /includes
         // directory; from the storefront, it's in the template-specific CSS directory.
@@ -117,14 +116,14 @@ function superglobals_echo()
 ?>
 <script>
     function superglobalspopup() {
-        var newwindow=window.open('','name', 'status=yes, menubar=yes, scrollbars=1, fullscreen=1, resizable=1, toolbar=yes');
-        var tmp = newwindow.document;
-        tmp.write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n');
-        tmp.write('<html xmlns="http://www.w3.org/1999/xhtml">\n');
+        let newwindow=window.open('','name', 'status=yes, menubar=yes, scrollbars=1, fullscreen=1, resizable=1, toolbar=yes');
+        let tmp = newwindow.document;
+        tmp.write('<!doctype html>\n');
+        tmp.write('<html <?php echo HTML_PARAMS; ?>>\n');
         tmp.write('<head>\n');
         tmp.write('<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />\n');
         tmp.write('<title>Superglobals Popup<\/title>\n');
-        tmp.write('<link rel="stylesheet" type="text/css" href="<?php echo $stylesheet_location; ?>" />\n');    
+        tmp.write('<link rel="stylesheet" href="<?php echo $stylesheet_location; ?>" />\n');
         tmp.write('<\/head><body>\n');
 <?php
         $find = ["\r", "\r\n", "\n"]; //steve how to get carriage returns for better-looking html source?
@@ -144,7 +143,7 @@ function superglobals_echo()
     return $superglobals_buffer;
 }
 
-function superglobals_check_allowed() 
+function superglobals_check_allowed()
 {
     // -----
     // Indicate, initially, that the output should not be generated.
@@ -199,7 +198,7 @@ function superglobals_ip_check()
 function superglobals_format($superglobals_var, $recursion = false, $show_customvar = false)
 {
     global $showQueryCache;
-  
+
     // $recursion = FALSE => reset recursion if the function is not called (a second time) from itself
     static $recursionlevel, $toplevel_key, $class;
 
@@ -220,28 +219,26 @@ function superglobals_format($superglobals_var, $recursion = false, $show_custom
     if (!isset($class)) {
         $class = '';
     }
-    if (!$superglobals_var_type == '') {
+    if (!($superglobals_var_type === '')) {
         $class = ' class="superglobals_' . $superglobals_var_type . '"';
     }
 
     // $tabs and $tabs_li are used for html source formatting only
     $tabs = "\n";
-    for ($i = 0; $i <= $recursionlevel; $i++) {
-        $tabs .= "\t";
-    }
+    $tabs .= str_repeat("\t", $recursionlevel + 1);
     $tabs_li = $tabs . "\t";
 
-    if (is_object($superglobals_var) || (is_countable($superglobals_var) && count($superglobals_var) != 0)) {
+    if (is_object($superglobals_var) || (is_countable($superglobals_var) && count($superglobals_var) !== 0)) {
         $sg_exclusions = explode(',', SHOW_SUPERGLOBALS_EXCLUSIONS);
 
         echo $tabs . '<ul' . $class . '>';
         $numLineItems = 0;
         if (is_array($superglobals_var) || is_object($superglobals_var)) {
             foreach ($superglobals_var as $key => $v) {
-                if ( (!$showQueryCache && $key === 'queryCache') || ($key != 0 && in_array($key, $sg_exclusions)) ) continue;
+                if ( (!$showQueryCache && $key === 'queryCache') || ($key !== 0 && in_array($key, $sg_exclusions)) ) continue;
 
                 // store the top level key into $toplevel_key (used during recursion to determine if the value should be echoed or not)
-                if ($recursionlevel == 0) {
+                if ($recursionlevel === 0) {
                     $toplevel_key = $key;
                 }
 
@@ -255,7 +252,7 @@ function superglobals_format($superglobals_var, $recursion = false, $show_custom
                         || ($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST === 'true') 
                         || ($toplevel_key === '_SESSION' && SHOW_SUPERGLOBALS_SESSION === 'true')
                         || ($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER === 'true') 
-                        || ($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV === 'true') 
+                        || ($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV === 'true')
                         || ($toplevel_key === '_FILES' && SHOW_SUPERGLOBALS_FILES === 'true')) {
                         $numLineItems++;
                         switch (gettype($v)) {
@@ -284,15 +281,15 @@ function superglobals_format($superglobals_var, $recursion = false, $show_custom
                                 break;
 
                             case 'resource':
-                                echo $tabs_li . '<li class="superglobals_resource"><strong>' . htmlspecialchars(strval($key), ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(resource: ' . get_resource_type($v) . ')</span> =&gt; ' . htmlspecialchars(strval($v), ENT_COMPAT, CHARSET, true) . '</li>';
+                                echo $tabs_li . '<li class="superglobals_resource"><strong>' . htmlspecialchars((string)$key, ENT_COMPAT, CHARSET) . '</strong> <span class="superglobals_type">(resource: ' . get_resource_type($v) . ')</span> =&gt; ' . htmlspecialchars((string)$v, ENT_COMPAT, CHARSET) . '</li>';
                                 break;
 
                             case 'string':
-                                echo $tabs_li . '<li><strong>' . htmlspecialchars($key, ENT_COMPAT, CHARSET, true) . '</strong> <span class="superglobals_type">(string)</span> =&gt; ' . htmlentities($v, ENT_COMPAT, CHARSET, true) . '</li>';
+                                echo $tabs_li . '<li><strong>' . htmlspecialchars((string)$key, ENT_COMPAT, CHARSET) . '</strong> <span class="superglobals_type">(string)</span> =&gt; ' . htmlentities($v, ENT_COMPAT, CHARSET) . '</li>';
                                 break;
 
                             default:
-                                echo $tabs_li . '<li><strong>' . $key . '</strong> <span class="superglobals_type">(' . gettype($v) . ')</span> =&gt; ' . htmlspecialchars(strval($v), ENT_COMPAT, CHARSET, true) . '</li>';
+                                echo $tabs_li . '<li><strong>' . $key . '</strong> <span class="superglobals_type">(' . gettype($v) . ')</span> =&gt; ' . htmlspecialchars((string) $v, ENT_COMPAT, CHARSET) . '</li>';
                                 break;
 
                         } // end switch
@@ -318,7 +315,7 @@ function superglobals_format($superglobals_var, $recursion = false, $show_custom
     }
 }
 
-function superglobals_get_ip_address() 
+function superglobals_get_ip_address()
 {
     if (!empty($_SERVER['REMOTE_ADDR'])) {
         $ip = $_SERVER['REMOTE_ADDR'];
