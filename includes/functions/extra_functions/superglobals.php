@@ -126,8 +126,8 @@ function superglobals_echo()
         tmp.write('<link rel="stylesheet" href="<?php echo $stylesheet_location; ?>" />\n');
         tmp.write('<\/head><body>\n');
 <?php
-        $find = array("\r", "\r\n", "\n"); //todo how to get carriage returns for better-looking html source?
-        $replace = array("", "", "");
+        $find = ["\r", "\r\n", "\n"]; //steve how to get carriage returns for better-looking html source?
+        $replace = ['', '', '']; 
 ?>
         tmp.write('<?php echo addslashes(str_replace($find, $replace, $superglobals_buffer)) ; ?>\n');
         tmp.write('<\/body>\n<\/html>');
@@ -136,8 +136,9 @@ function superglobals_echo()
     superglobalspopup();
 </script>
 <?php
-            //-eof-c-v1.4.4-torvista
-            $superglobals_buffer = ob_get_clean();
+        //-eof-c-v1.4.4-torvista
+        $superglobals_buffer = ob_get_contents();
+        ob_end_clean();
     }
     return $superglobals_buffer;
 }
@@ -243,14 +244,14 @@ function superglobals_format($superglobals_var, $recursion = false, $show_custom
 
                 // check if toplevel_key starts with ....
                 if (SHOW_SUPERGLOBALS_FILTER_HTTP === 'false' || !strstr($toplevel_key, 'HTTP_') == $toplevel_key) {
-                    if (SHOW_SUPERGLOBALS_ALL === 'true'
-                        || $show_customvar
-                        || ($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET === 'true')
-                        || ($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST === 'true')
-                        || ($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE === 'true')
-                        || ($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST === 'true')
+                    if (SHOW_SUPERGLOBALS_ALL === 'true' 
+                        || $show_customvar 
+                        || ($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET === 'true') 
+                        || ($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST === 'true') 
+                        || ($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE === 'true') 
+                        || ($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST === 'true') 
                         || ($toplevel_key === '_SESSION' && SHOW_SUPERGLOBALS_SESSION === 'true')
-                        || ($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER === 'true')
+                        || ($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER === 'true') 
                         || ($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV === 'true')
                         || ($toplevel_key === '_FILES' && SHOW_SUPERGLOBALS_FILES === 'true')) {
                         $numLineItems++;
