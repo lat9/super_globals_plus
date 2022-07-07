@@ -7,7 +7,7 @@
 // | This source file is subject to version 2.0 of the GPL license,       |
 // | that is bundled with this package in the file LICENSE.TXT            |
 // +----------------------------------------------------------------------+
-// $Id: superglobals.php v2.2.1
+// $Id: superglobals.php v2.2.2
 //
 // Change History:
 // 2007/10/15 ... v1.24 ... Paul Mathot ... Initial Zen Cart release
@@ -64,8 +64,14 @@ $showQueryCache = (defined('SHOW_SUPERGLOBALS_QUERYCACHE') && SHOW_SUPERGLOBALS_
 function superglobals_echo()
 {
     // -----
-    // Needed for zc158+, since that $languageLoader results in a circular reference.
+    // Needed for zc158+, since that $languageLoader results in a circular reference.  If the languageLoader's
+    // debug is enabled, don't render the SuperGlobals, as it results in an error from application_bottom.php ...
+    // which is where that developer-define is used.
     //
+    if (defined('DEV_SHOW_APPLICATION_BOTTOM_DEBUG') && DEV_SHOW_APPLICATION_BOTTOM_DEBUG === true) {
+        echo '<h2>SuperGlobals output disabled, due to &quot;DEV_SHOW_APPLICATION_BOTTOM_DEBUG&quot; being set!</h2>';
+        return null;
+    }
     unset($GLOBALS['languageLoader']);
 
     ob_start();
