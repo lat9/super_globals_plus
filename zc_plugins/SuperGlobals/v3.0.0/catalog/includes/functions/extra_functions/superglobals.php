@@ -48,17 +48,6 @@ $globals = superglobals_echo();
 echo $globals;
 
 */
-// -----
-// The 'is_countable' function was introduced in PHP 7.3; create a compatible
-// instance if the function is not available in the current PHP version.
-//
-if (!function_exists('is_countable')) {
-    function is_countable($c)
-    {
-        return is_array($c) || $c instanceof Countable;
-    }
-}
-
 $showQueryCache = (defined('SHOW_SUPERGLOBALS_QUERYCACHE') && SHOW_SUPERGLOBALS_QUERYCACHE === 'true');
 
 function superglobals_echo()
@@ -125,17 +114,17 @@ function superglobals_echo()
         let newwindow=window.open('','name', 'status=yes, menubar=yes, scrollbars=1, fullscreen=1, resizable=1, toolbar=yes');
         let tmp = newwindow.document;
         tmp.write('<!doctype html>\n');
-        tmp.write('<html <?php echo HTML_PARAMS; ?>>\n');
+        tmp.write('<html <?= HTML_PARAMS ?>>\n');
         tmp.write('<head>\n');
-        tmp.write('<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />\n');
+        tmp.write('<meta http-equiv="Content-Type" content="text/html; charset=<?= CHARSET ?>" />\n');
         tmp.write('<title>Superglobals Popup<\/title>\n');
-        tmp.write('<link rel="stylesheet" href="<?php echo $stylesheet_location; ?>" />\n');
+        tmp.write('<link rel="stylesheet" href="<?= $stylesheet_location ?>" />\n');
         tmp.write('<\/head><body>\n');
 <?php
         $find = ["\r", "\r\n", "\n"]; //steve how to get carriage returns for better-looking html source?
         $replace = ['', '', '']; 
 ?>
-        tmp.write('<?php echo addslashes(str_replace($find, $replace, $superglobals_buffer)) ; ?>\n');
+        tmp.write('<?= addslashes(str_replace($find, $replace, $superglobals_buffer)) ?>\n');
         tmp.write('<\/body>\n<\/html>');
         tmp.close();
     }
@@ -240,7 +229,9 @@ function superglobals_format($superglobals_var, $recursion = false, $show_custom
         $numLineItems = 0;
         if (is_array($superglobals_var) || is_object($superglobals_var)) {
             foreach ($superglobals_var as $key => $v) {
-                if ( (!$showQueryCache && $key === 'queryCache') || ($key !== 0 && in_array($key, $sg_exclusions)) ) continue;
+                if ((!$showQueryCache && $key === 'queryCache') || ($key !== 0 && in_array($key, $sg_exclusions))) {
+                    continue;
+                }
 
                 // store the top level key into $toplevel_key (used during recursion to determine if the value should be echoed or not)
                 if ($recursionlevel === 0) {
@@ -249,14 +240,14 @@ function superglobals_format($superglobals_var, $recursion = false, $show_custom
 
                 // check if toplevel_key starts with ....
                 if (SHOW_SUPERGLOBALS_FILTER_HTTP === 'false' || !strstr($toplevel_key, 'HTTP_') == $toplevel_key) {
-                    if (SHOW_SUPERGLOBALS_ALL === 'true' 
-                        || $show_customvar 
-                        || ($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET === 'true') 
-                        || ($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST === 'true') 
-                        || ($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE === 'true') 
-                        || ($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST === 'true') 
+                    if (SHOW_SUPERGLOBALS_ALL === 'true'
+                        || $show_customvar
+                        || ($toplevel_key === '_GET' && SHOW_SUPERGLOBALS_GET === 'true')
+                        || ($toplevel_key === '_POST' && SHOW_SUPERGLOBALS_POST === 'true')
+                        || ($toplevel_key === '_COOKIE' && SHOW_SUPERGLOBALS_COOKIE === 'true')
+                        || ($toplevel_key === '_REQUEST' && SHOW_SUPERGLOBALS_REQUEST === 'true')
                         || ($toplevel_key === '_SESSION' && SHOW_SUPERGLOBALS_SESSION === 'true')
-                        || ($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER === 'true') 
+                        || ($toplevel_key === '_SERVER' && SHOW_SUPERGLOBALS_SERVER === 'true')
                         || ($toplevel_key === '_ENV' && SHOW_SUPERGLOBALS_ENV === 'true')
                         || ($toplevel_key === '_FILES' && SHOW_SUPERGLOBALS_FILES === 'true')) {
                         $numLineItems++;
