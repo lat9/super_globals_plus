@@ -7,7 +7,6 @@
 // | This source file is subject to version 2.0 of the GPL license,       |
 // | that is bundled with this package in the file LICENSE.TXT            |
 // +----------------------------------------------------------------------+
-// $Id: superglobals.php v2.2.2
 //
 // Change History:
 // 2007/10/15 ... v1.24 ... Paul Mathot ... Initial Zen Cart release
@@ -50,7 +49,7 @@ echo $globals;
 */
 $showQueryCache = (defined('SHOW_SUPERGLOBALS_QUERYCACHE') && SHOW_SUPERGLOBALS_QUERYCACHE === 'true');
 
-function superglobals_echo()
+function superglobals_echo(string $superglobals_stylesheet)
 {
     // -----
     // Needed for zc158+, since that $languageLoader results in a circular reference.  If the languageLoader's
@@ -68,7 +67,6 @@ function superglobals_echo()
         return null;
     }
 
-    $superglobals_stylesheet = DIR_FS_CATALOG . 'includes/templates/template_default/css/superglobals.css';
     if (file_exists($superglobals_stylesheet)) {
         echo "\n" . '<style>' . file_get_contents($superglobals_stylesheet) . '</style>';
     }
