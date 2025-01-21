@@ -27,9 +27,9 @@ class ScriptedInstaller extends ScriptedInstallBase
             "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, date_added, sort_order, use_function, set_function)
              VALUES
-                ('Enable Superglobals (catalog)', 'SHOW_SUPERGLOBALS', 'false', 'If true, the Superglobals will be shown in the shop at the bottom of the pages (and depending on the settings below).', $this->cgi, now(), 10, NULL, 'zen_cfg_select_option([\'true\', \'false\','),
+                ('Enable Superglobals (catalog)', 'SHOW_SUPERGLOBALS', 'false', 'If true, the Superglobals will be shown in the shop at the bottom of the pages (and depending on the settings below).', $this->cgi, now(), 10, NULL, 'zen_cfg_select_option([\'true\', \'false\'],'),
 
-                ('Enable Superglobals (admin)', 'SHOW_SUPERGLOBALS_ADMIN', 'false', 'If true, the Superglobals will be shown in the admin at the top of pages (and depending on the settings below).', $this->cgi, now(), 15, NULL, 'zen_cfg_select_option([\'true\', \'false\']),'),
+                ('Enable Superglobals (admin)', 'SHOW_SUPERGLOBALS_ADMIN', 'false', 'If true, the Superglobals will be shown in the admin at the top of pages (and depending on the settings below).', $this->cgi, now(), 15, NULL, 'zen_cfg_select_option([\'true\', \'false\'],'),
 
                 ('Show Superglobals in Popup', 'SHOW_SUPERGLOBALS_POPUP', 'true', 'If true the Superglobals will be displayed in a popup window, using javascript. Set to false if you do not want or can not use javascript and the Superglobals will be displayed at the bottom of each page.', $this->cgi, now(), 18, NULL, 'zen_cfg_select_option([\'true\', \'false\'],'),
 
