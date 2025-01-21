@@ -1,6 +1,6 @@
 # Super Globals Plus for Zen Cart
 
-#### Zen Cart Support Thread: [https://www.zen-cart.com/forum/showthread.php?p=429150](https://www.zen-cart.com/forum/showthread.php?p=429150)
+#### Zen Cart Support Thread: [https://www.zen-cart.com/showthread.php?74800-Superglobals-Plus&p=478114](https://www.zen-cart.com/showthread.php?74800-Superglobals-Plus&p=478114)
 
 Super Globals Plus is a developers' tool that makes evaluating variables easy. It produces a clear overview of the contents of strings, arrays, constants, objects, arrays within object, objects within arrays or whatever.
 

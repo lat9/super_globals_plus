@@ -2,8 +2,8 @@
 <html dir="ltr" lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Super Globals Plus for Zen Cart v1.5.6 through 1.5.8</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Globals Plus for Zen Cart v2.1.0 and later</title>
 <style>
 <!--
 a, a:active, a:visited { color: #006666; text-decoration: none; }
@@ -30,11 +30,11 @@ ol li ul li, ul li ul li, ul li, ol li { margin: 0 auto 5px; }
 
 <body>
 <a name="top" id="top"></a>
-<h1>Super Globals Plus for Zen Cart 1.5.6 through 1.5.8</h1>
-<h3>Version 2.2.2 by paulm, torvista and lat9</h3>
-<p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/forum/showthread.php?p=429150" target="_blank">https://www.zen-cart.com/forum/showthread.php?p=429150</a></p>
-<h2>Copyright (C) Vinos de Frutas Tropicales 2011-2022</h2>
-<p>Paul Mathot, Haarlem, the Netherlands, September 2007 (beterelektro.nl) :: lat9 (vinosdefrutastropicales.com), 2011-2019.  Released under the Gnu General Public License (see included LICENSE.TXT)</p>
+<h1>Super Globals Plus for Zen Cart 2.1.0 and Later</h1>
+<h3>Version 3.0.0 by paulm, torvista and lat9</h3>
+<p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php?74800-Superglobals-Plus&p=478114" target="_blank">https://www.zen-cart.com/showthread.php?74800-Superglobals-Plus&p=478114</a></p>
+<h2>Copyright (C) Vinos de Frutas Tropicales 2011-2025</h2>
+<p>Paul Mathot, Haarlem, the Netherlands, September 2007 (beterelektro.nl) :: lat9 (vinosdefrutastropicales.com), 2011-2025.  Released under the Gnu General Public License (see included LICENSE.TXT)</p>
 
 <h2>What it does</h2>
 <p>Super Globals Plus is a developers' tool that makes evaluating variables easy. It produces a clear overview of the contents of strings, arrays, constants, objects, arrays within object, objects within arrays or whatever. 
@@ -54,108 +54,40 @@ Features:</p>
 <li>Optional IP address protection.</li>
 <li>Admin switches for all options.</li>
 </ul>
-<img src="superglobals.png" title="Sample output" alt="Sample output" />
+<img src="superglobals.png" title="Sample output" alt="Sample output">
 
 <h2 class="clear">How to use it</h2>
-<p>After you have you have <a href="#install">installed</a> the plugin and logged into your store's admin, you will see the <em>Configuration-&gt;Superglobals</em> selection.  Within that selection are the values that you can use to control the plugin's display.</p>
+<p>After you have logged into your store's admin and installed the plugin, you will see the <em>Configuration :: Superglobals</em> selection.  Within that selection are the values that you can use to control the plugin's display.</p>
 
-<h2 id="install">Installation</h2>
-<p>There are no core-file overwrites for the <em>storefront</em> elements of this plugin, but (depending on your base Zen Cart version) there might be a <span class="corefile">core-file</span> admin change required.  You also might need to change one of your storefront template files, if the template author hasn't provided the required notification.  You should <strong>always</strong> backup your store's database and files prior to making any changes.</p>
-<p><strong>Note:</strong> The installation process for <em>Super Globals Plus</em>, v2.0.0 has <em>again</em> changed.  The admin- and template files that require update for this plugin have changed again for Zen Cart 1.5.6.  As such, the <em>Super Globals</em> installation now <em>might</em> require you to edit the files required by this plugin, based on the version of Zen Cart into which you're installing/upgrading this plugin!</p>
+<h2 id="install">Installation and Removal</h2>
+<p>This plugin is now <em>encapsulated</em> and has no core-file overwrites. Installation and removal are simplified.</p>
 
 <h3>Installing Super Globals</h3>
-<p>Depending on your store's Zen Cart version and active template, <em>Super Globals</em> might require changes to a couple of admin-level <span class="corefile">corefiles</span> and one file in your currently active template.  Based on the variation between the Zen Cart admin releases and the available templates, this plugin, starting with v2.0.0, <em>no longer distributes</em> those base files.</p>
 <ol>
-  <li>Unzip the plugin's distribution file.</li>
-  <li>Rename the &quot;YOUR_ADMIN&quot; directory to match your secret admin directory's name.</li>
-  <li>If you require the <em>Super Globals</em> display to be available admin-side, you <em>might</em> need to make the following edits to files <em>in your store's admin-directory</em>:<ol type="a">
-    <li><code>/includes/footer.php</code>:<ul>
-        <li>If your store runs on a version of Zen Cart <em>prior to</em> 156b, you'll need to add the following line, just after the <b>&lt;/footer&gt;</b> tag:<br>
-            <textarea rows="1" cols="110">$zco_notifier-&gt;notify('NOTIFY_ADMIN_FOOTER_END');</textarea>
-        </li>
-        <li>If you are upgrading from a version <em>prior to</em> v2.1.0 of <em>Super Globals</em>, you can safely remove this code block:<br>
-            <textarea rows="7" cols="110">
-&lt;!--bof- superglobals display --&gt;
-&lt;?php
-// BEGIN Superglobals
-if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPERGLOBALS_ADMIN == 'true') echo superglobals_echo();
-// END Superglobals
-?&gt;
-&lt;!--eof- superglobals display --&gt;
-            </textarea>
-        </li>
-    </ul></li>
-    <li><code>/includes/stylesheet.css</code>:<ul>
-        <li>If you are upgrading from a version <em>prior to</em> v2.2.0 of <em>Super Globals</em>, find the line that reads:<br><br>
-            <code class="corefile">@import url("stylesheet_superglobals.css");/* including stylesheet for superglobals display */</code><br><br>
-            and remove it!
-        </li></ul>
-  </ol></li>
-  <li>If you require the <em>Super Globals</em> display to be available on the storefront, you <em>might</em> need to make the following file changes ... noting that <b>YOUR_TEMPLATE</b> is a reference to your store's currently-active template:<ol type="a">
-    <li><code>/includes/templates/YOUR_TEMPLATE/common/tpl_main_page.php</code>:<ul>
-        <li>If that file does not include the following code block just before the <b>&lt;/body&gt;</b> tag (present in the &quot;core&quot; Zen Cart templates since v155), you'll need to add it:<br>
-            <textarea rows="3" cols="110">
-&lt;?php /* add any end-of-page code via an observer class */
-  $zco_notifier-&gt;notify('NOTIFY_FOOTER_END', $current_page);
-?&gt;
-            </textarea>
-        </li>
-        <li>If you are upgrading from a version <em>prior to</em> v2.1.0 of <em>Super Globals</em>, you can safely remove this code block:<br>
-            <textarea rows="7" cols="110">
-&lt;!--bof- superglobals display --&gt;
-&lt;?php
-// BEGIN Superglobals
-if (defined('SHOW_SUPERGLOBALS') && SHOW_SUPERGLOBALS == 'true') echo superglobals_echo();
-// END Superglobals
-?&gt;
-&lt;!--eof- superglobals display --&gt;
-            </textarea>
-        </li>
-    </ul></li>
-    <li><code>/includes/templates/YOUR_TEMPLATE/css/stylesheet_superglobals.css</code>.  This file can be safely removed from your store's file-system.</li>
-  </ol></li>
-  <li>Log into your Zen Cart admin.</li>
-  <li>Copy the plugin's files to your store's file-system:<ol>
-    <li>/includes/auto_loaders/config.SuperGlobals.php <span class="smaller">(Added in v2.1.0)</span></li>
-    <li>/includes/classes/observers/SuperGlobalsObserver.php <span class="smaller">(Added in v2.1.0)</span></li>
+    <li>Unzip this distribution's zip-file; you'll see a <code>zc_plugins</code> directory, and inside it a <code>SuperGlobals</code> directory, and inside that another directory with a version number.</li>
+    <li>Copy the plugin's <code>SuperGlobals</code> directory to your site's file-system's <code>zc_plugins</code> directory.</li>
+    <li>Log into your Zen Cart admin and navigate to <em>Modules :: Plugin Manager</em>. Click on <code>Super Globals</code>, then click Install and confirm by clicking Install.</li>
+    <li>You'll see a <em>Superglobals</em> element under the admin's <em>Configuration</em> tab; proceed to the configuration step, see below.</li>
+</ol>
+<p id="removed-files"><b>Note:</b> These files are <em>automatically removed</em> when v3.0.0 or later of this plugin is installed:</p>
+<ol>
+    <li>/includes/auto_loaders/config.SuperGlobals.php</li>
+    <li>/includes/classes/observers/SuperGlobalsObserver.php</li>
     <li>/includes/functions/extra_functions/superglobals.php</li>
-    <li><span class="added">/includes/templates/template_default/css/superglobals.css</span> <span class="smaller">(Added in v2.2.0)</span></li>
-    <li><span class="template removed">/includes/templates/YOUR_TEMPLATE/common/tpl_main_page.php</span> <span class="smaller">(No longer distributed, as of v2.0.0.  Use the version you updated at step 4)</span></li>
-    <li><span class="removed">/includes/templates/YOUR_TEMPLATE/css/stylesheet_superglobals.css</span> <span class="smaller">(No longer used, as of v2.2.0)</span></li>
-    <li><span class="corefile removed">/YOUR_ADMIN/includes/footer.php</span> <span class="smaller">(No longer distributed, as of v2.0.0.  Use the version you updated at step 3.1)</span></li>
-    <li><span class="corefile removed">/YOUR_ADMIN/includes/stylesheet.css</span> <span class="smaller">(No longer distributed, as of v2.0.0.  Use the version you updated at step 3.2)</span></li>
-    <li><span class="removed">/YOUR_ADMIN/includes/stylesheet_superglobals.css</span> <span class="smaller">(No longer used, as of v2.2.0)</span></li>
-    <li>/YOUR_ADMIN/includes/auto_loaders/config.SuperGlobalsAdmin.php <span class="smaller">(Added in v2.1.0)</span></li>
+    <li>/includes/templates/template_default/css/superglobals.css</li>
+    <li>/YOUR_ADMIN/includes/auto_loaders/config.SuperGlobalsAdmin.php</li>
     <li>/YOUR_ADMIN/includes/functions/extra_functions/superglobals.php</li>
     <li>/YOUR_ADMIN/includes/languages/english/extra_definitions/superglobals.php</li>
-  </ol></li>
-  <li>Click the &quot;Admin Home&quot; link. After you've clicked that link, the plugin's auto-installer will run and the <em>Configuration-&gt;Superglobals</em> will be available.</li>
 </ol>
-<p>If you also require the admin-level <em>Super Globals</em> to be available on your admin's home-page, you'll need to follow the instructions in <a href="#admin-home">Admin Home-Page Installation</a>.</p>
 
-<h3 id="admin-home">Admin Home-Page Installation</h3>
-<p>The admin-console main-page display (<code>/YOUR_ADMIN/index.php</code>) tends to change with each Zen Cart version. If you want to have the benefits of the <em>Super Globals</em> display on that page, you'll need to perform a simple update to your copy of that file, adding the code block below to the very end of /YOUR_ADMIN/index.php &mdash; just before the <b>&lt;/body&gt;</b> tag:</p>
-<textarea rows="3" cols="110">
-&lt;?php /* add any end-of-page code via an observer class */
-  $zco_notifier-&gt;notify('NOTIFY_ADMIN_INDEX_END');
-?&gt;
-</textarea>
-<p>If you are upgrading to <em>Super Globals</em>, v2.1.0, from an earlier version, you can safely remove the following code-block from that file, if present:</p>
-<textarea rows="7" cols="110">
-&lt;!--bof- superglobals display --&gt;
-&lt;?php
-// BEGIN Superglobals
-if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPERGLOBALS_ADMIN == 'true') echo superglobals_echo();
-// END Superglobals
-?&gt;
-&lt;!--eof- superglobals display --&gt;
-</textarea>
-
-<h2>Un-install</h2>
-<p>Run either <strong>superglobals_remove.sql</strong> (for Zen Cart v1.5.0 or later) or <strong>superglobals_remove_139.sql</strong> (for Zen Cart v 1.3.9x) to remove the database entries, then delete the files you previously copied (replacing the admin core files that were overwritten).</p>
+<h3>Un-install</h2>
+<p>Navigate to your Zen Cart admin's <em>Modules :: Plugin Manager</em>, highlight the entry associated with <b>Super Globals</b> and click the <var>Un-Install</var> button.</p>
 
 <h2>Version History:</h2>
 <ul>
+  <li>v3.0.0 (lat9), 2025-01-21<ul>
+    <li>CHANGE: The plugin is now released as a Zen Cart encapsulated one.</li>
+  </ul></li>
   <li>v2.2.2 (lat9), 2022-07-07<ul>
     <li>BUGFIX: Only 'unset' $languageLoader if its developer-testing isn't active.</li>
     <li>The following files were changed:<ol>

@@ -96,16 +96,6 @@ function superglobals_echo(string $superglobals_stylesheet)
         // add js popup script
         ob_start();
         //-bof-c-v1.4.4-torvista
-
-        // -----
-        // Stylesheet location depends on "environment" in which the plugin has been loaded. From the admin, it's in the base /includes
-        // directory; from the storefront, it's in the template-specific CSS directory.
-        //
-        if (defined('SHOW_SUPERGLOBALS_FROM_ADMIN')) {
-            $stylesheet_location = DIR_WS_INCLUDES . 'stylesheet_superglobals.css';
-        } else {
-            $stylesheet_location = $GLOBALS['template']->get_template_dir('.css', DIR_WS_TEMPLATE, $GLOBALS['current_page_base'], 'css') . '/stylesheet_superglobals.css';
-        }
 ?>
 <script>
     function superglobalspopup() {
@@ -114,13 +104,13 @@ function superglobals_echo(string $superglobals_stylesheet)
         tmp.write('<!doctype html>\n');
         tmp.write('<html <?= HTML_PARAMS ?>>\n');
         tmp.write('<head>\n');
-        tmp.write('<meta http-equiv="Content-Type" content="text/html; charset=<?= CHARSET ?>" />\n');
+        tmp.write('<meta http-equiv="Content-Type" content="text/html; charset=<?= CHARSET ?>">\n');
         tmp.write('<title>Superglobals Popup<\/title>\n');
-        tmp.write('<link rel="stylesheet" href="<?= $stylesheet_location ?>" />\n');
+        tmp.write('<link rel="stylesheet" href="<?= $superglobals_stylesheet ?>">\n');
         tmp.write('<\/head><body>\n');
 <?php
         $find = ["\r", "\r\n", "\n"]; //steve how to get carriage returns for better-looking html source?
-        $replace = ['', '', '']; 
+        $replace = ['', '', ''];
 ?>
         tmp.write('<?= addslashes(str_replace($find, $replace, $superglobals_buffer)) ?>\n');
         tmp.write('<\/body>\n<\/html>');

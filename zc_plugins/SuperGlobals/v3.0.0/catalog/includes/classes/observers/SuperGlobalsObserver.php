@@ -49,6 +49,7 @@ class SuperGlobalsObserver extends \base
             case 'NOTIFY_ADMIN_FOOTER_END':
             case 'NOTIFY_ADMIN_INDEX_END':
                 if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPERGLOBALS_ADMIN === 'true') {
+                    zen_define_default('SHOW_SUPERGLOBALS_FROM_ADMIN', true);
                     $css_location = $this->loadFiles();
                     echo superglobals_echo($css_location);
                 }
@@ -80,11 +81,11 @@ class SuperGlobalsObserver extends \base
         // -----
         // Load the processing function file.
         //
-        require $catalog_dir . 'functions/superglobals.php';
+        require $catalog_dir . 'includes/functions/superglobals.php';
 
         // -----
         // Return the location of the plugin's CSS file.
         //
-        return $catalog_dir . 'templates/default/css/superglobals.css';
+        return $catalog_dir . 'includes/templates/default/css/superglobals.css';
     }
 }
