@@ -1,14 +1,18 @@
 <?php
 // -----
 // Part of the Super Globals Plus plugin, provided by lat9.
-// Copyright (c) 2019, Vinos de Frutas Tropicales
+// Copyright (c) 2019-2025, Vinos de Frutas Tropicales
 //
-class SuperGlobalsObserver extends base 
+use Zencart\Traits\InteractsWithPlugins;
+
+class SuperGlobalsObserver extends \base
 {
+    use InteractsWithPlugins;
+
     // -----
     // Class constructor.
     //
-    public function __construct() 
+    public function __construct()
     {
         // -----
         // Watch for the end-of-page indicators from both the admin and storefront.
@@ -18,25 +22,25 @@ class SuperGlobalsObserver extends base
         // plugin's readme.
         //
         $this->attach(
-            $this, 
-            array(
+            $this,
+            [
                 //- From /admin/footer.php
                 'NOTIFY_ADMIN_FOOTER_END',
-                
+
                 //- From /admin/index.php
                 'NOTIFY_ADMIN_INDEX_END',
-                
+
                 //- From /includes/templates/YOUR_TEMPLATE/common/tpl_main_page.php
                 'NOTIFY_FOOTER_END',
-            )
+            ]
         );
     }
-    
+
     // -----
     // This function is invoked when the attached notifiers "fires" and results in the superglobals'
     // output being rendered.
     //
-    public function update(&$class, $eventID, $p1, &$p2, &$p3, &$p4, &$p5) 
+    public function update(&$class, string $eventID)
     {
         switch ($eventID) {
             // -----
@@ -44,22 +48,44 @@ class SuperGlobalsObserver extends base
             //
             case 'NOTIFY_ADMIN_FOOTER_END':
             case 'NOTIFY_ADMIN_INDEX_END':
-                if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPERGLOBALS_ADMIN == 'true') {
-                    echo superglobals_echo();
+                if (defined('SHOW_SUPERGLOBALS_ADMIN') && SHOW_SUPERGLOBALS_ADMIN === 'true') {
+                    zen_define_default('SHOW_SUPERGLOBALS_FROM_ADMIN', true);
+                    $css_location = $this->loadFiles();
+                    echo superglobals_echo($css_location);
                 }
                 break;
-                
+
             // -----
             // Storefront end-of-page.
             //
             case 'NOTIFY_FOOTER_END':
-                if (defined('SHOW_SUPERGLOBALS') && SHOW_SUPERGLOBALS == 'true') {
-                    echo superglobals_echo();
+                if (defined('SHOW_SUPERGLOBALS') && SHOW_SUPERGLOBALS === 'true') {
+                    $css_location = $this->loadFiles();
+                    echo superglobals_echo($css_location);
                 }
                 break;
 
             default:
                 break;
         }
+    }
+
+    protected function loadFiles(): string
+    {
+        // -----
+        // Use the base trait to determine this plugin's directory location.
+        //
+        $this->detectZcPluginDetails(__DIR__);
+        $catalog_dir = $this->pluginManagerInstalledVersionDirectory . 'catalog/';
+
+        // -----
+        // Load the processing function file.
+        //
+        require $catalog_dir . 'includes/functions/superglobals.php';
+
+        // -----
+        // Return the location of the plugin's CSS file.
+        //
+        return $catalog_dir . 'includes/templates/default/css/superglobals.css';
     }
 }

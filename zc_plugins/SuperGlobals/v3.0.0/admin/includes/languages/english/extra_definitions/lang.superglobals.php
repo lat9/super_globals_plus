@@ -19,5 +19,6 @@
 // +----------------------------------------------------------------------+
 //  $Id: superglobals.php 1105 2011-08-07 22:05:35Z lat9 $
 //
-define('BOX_CONFIGURATION_SUPERGLOBALS', 'Superglobals');
-?>
+return [
+    'BOX_CONFIGURATION_SUPERGLOBALS' => 'Superglobals',
+];
