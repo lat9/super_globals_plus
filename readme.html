@@ -31,9 +31,9 @@ ol li ul li, ul li ul li, ul li, ol li { margin: 0 auto 5px; }
 <body>
 <a name="top" id="top"></a>
 <h1>Super Globals Plus for Zen Cart 2.1.0 and Later</h1>
-<h3>Version 3.0.0 by paulm, torvista and lat9</h3>
+<h3>Version 3.1.0 by paulm, torvista and lat9</h3>
 <p>Current Support Thread at Zen Cart Forums: <a href="https://www.zen-cart.com/showthread.php?74800-Superglobals-Plus&p=478114" target="_blank">https://www.zen-cart.com/showthread.php?74800-Superglobals-Plus&p=478114</a></p>
-<h2>Copyright (C) Vinos de Frutas Tropicales 2011-2025</h2>
+<h2>Copyright (C) Vinos de Frutas Tropicales 2011-2026</h2>
 <p>Paul Mathot, Haarlem, the Netherlands, September 2007 (beterelektro.nl) :: lat9 (vinosdefrutastropicales.com), 2011-2025.  Released under the Gnu General Public License (see included LICENSE.TXT)</p>
 
 <h2>What it does</h2>
@@ -85,6 +85,10 @@ Features:</p>
 
 <h2>Version History:</h2>
 <ul>
+ <li>v3.1.0 (lat9), 2026-06-27<ul>
+    <li>CHANGE: Remove the plugin's <var>functions</var> file, incorporating those into catalog-observer class methods.</li>
+    <li>CHANGE: Use zc300's <code>zen_config</code>, if present, or a polyfill otherwise to determine the plugin's configuration values.</li>
+  </ul></li>
   <li>v3.0.0 (lat9), 2025-01-21<ul>
     <li>CHANGE: The plugin is now released as a Zen Cart encapsulated one.</li>
   </ul></li>
