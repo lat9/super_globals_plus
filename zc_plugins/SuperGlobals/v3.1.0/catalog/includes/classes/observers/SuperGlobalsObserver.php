@@ -3,6 +3,8 @@
 // Part of the Super Globals Plus plugin, provided by lat9.
 // Copyright (c) 2019-2026, Vinos de Frutas Tropicales
 //
+// Last updated: v3.1.0
+//
 use Zencart\Traits\InteractsWithPlugins;
 
 class SuperGlobalsObserver extends \base
@@ -351,12 +353,16 @@ class SuperGlobalsObserver extends \base
                                     break;
 
                                 default:
+                                    $type = gettype($v);
+                                    if ($type === 'float' && is_nan($v)) {
+                                        $v = 'NAN';
+                                    }
                                     echo $tabs_li .
                                         '<li>' .
                                             '<strong>' . $key . '</strong>' .
                                             ' ' .
-                                            '<span class="superglobals_type">(' . gettype($v) . ')</span>' .
-                                            ' =&gt; ' . htmlspecialchars((string) $v, ENT_COMPAT, CHARSET) .
+                                            '<span class="superglobals_type">(' . $type . ')</span>' .
+                                            ' =&gt; ' . htmlspecialchars((string)$v, ENT_COMPAT, CHARSET) .
                                         '</li>';
                                     break;
 
