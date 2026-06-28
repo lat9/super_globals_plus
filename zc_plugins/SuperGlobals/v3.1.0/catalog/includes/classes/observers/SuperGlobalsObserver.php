@@ -354,7 +354,7 @@ class SuperGlobalsObserver extends \base
 
                                 default:
                                     $type = gettype($v);
-                                    if ($type === 'float' && is_nan($v)) {
+                                    if (($type === 'float' || $type === 'double') && is_nan($v)) {
                                         $v = 'NAN';
                                     }
                                     echo $tabs_li .
