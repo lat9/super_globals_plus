@@ -88,7 +88,7 @@ Features:</p>
  <li>v3.1.0 (lat9), 2026-06-28<ul>
     <li>CHANGE: Remove the plugin's <var>functions</var> file, incorporating those into catalog-observer class methods.</li>
     <li>CHANGE: Use zc300's <code>zen_config</code>, if present, or a polyfill otherwise to determine the plugin's configuration values.</li>
-    <li>CHANGE: Indicate that any non-encapsulated files are removed on the plugin's installation.</li>
+    <li>CHANGE: Indicate that any non-encapsulated files are removed on the plugin's installation; a message is displayed on install for zc221 and later.</li>
     <li>BUGFIX: Check for <var>NAN</var> values; they can't be coerced into strings and throw PHP warnings if a coercion is attempted.</li>
   </ul></li>
   <li>v3.0.0 (lat9), 2025-01-21<ul>
