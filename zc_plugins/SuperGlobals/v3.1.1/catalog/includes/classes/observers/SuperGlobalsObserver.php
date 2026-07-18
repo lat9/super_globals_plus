@@ -3,7 +3,7 @@
 // Part of the Super Globals Plus plugin, provided by lat9.
 // Copyright (c) 2019-2026, Vinos de Frutas Tropicales
 //
-// Last updated: v3.1.0
+// Last updated: v3.1.1
 //
 use Zencart\Traits\InteractsWithPlugins;
 
@@ -204,13 +204,14 @@ class SuperGlobalsObserver extends \base
         $superglobals_buffer = ob_get_clean();
 
         if ($this->zenConfig('SHOW_SUPERGLOBALS_POPUP') !== 'false') {
+            $superglobals_stylesheet = str_replace(DIR_FS_CATALOG, '', $stylesheet);
             // add js popup script
             ob_start();
             //-bof-c-v1.4.4-torvista
 ?>
     <script>
         function superglobalspopup() {
-            let newwindow=window.open('','name', 'status=yes, menubar=yes, scrollbars=1, fullscreen=1, resizable=1, toolbar=yes');
+            let newwindow = window.open('','name', 'status=yes, menubar=yes, scrollbars=1, fullscreen=1, resizable=1, toolbar=yes');
             let tmp = newwindow.document;
             tmp.write('<!doctype html>\n');
             tmp.write('<html <?= HTML_PARAMS ?>>\n');
