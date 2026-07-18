@@ -1,6 +1,6 @@
 <?php
 return [
-    'pluginVersion' => 'v3.1.0',
+    'pluginVersion' => 'v3.1.1',
     'pluginName' => 'Super Globals',
     'pluginDescription' => 'Super Globals Plus is a developers\' tool that makes evaluating variables easy.',
     'pluginAuthor' => 'Vinos de Frutas Tropicales (lat9)',
